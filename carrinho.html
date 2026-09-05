@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Point da Aldeia &#8211; Carrinho</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="carrinho.css">
+</head>
+<body>
+
+<!-- =========================================
+     P1 — DETALHE DO PRODUTO
+     ========================================= -->
+<div class="page" id="page-produto">
+  <div class="checkout-topbar">
+    <button class="back-btn" onclick="voltarParaLoja()"><i class="fas fa-arrow-left"></i></button>
+    <span class="page-title"></span>
+    <span class="right-action"></span>
+  </div>
+  <div class="page-body">
+    <div class="prod-img" id="prodImg"></div>
+    <div class="prod-detail-body">
+      <h2 id="prodNome"></h2>
+      <div class="prod-detail-price">R$ <span id="prodPreco"></span>/UN</div>
+      <div class="obs-label">Observa&ccedil;&otilde;es</div>
+      <textarea class="obs-input" id="prodObs" placeholder="Digite alguma observa&ccedil;&atilde;o"></textarea>
+    </div>
+  </div>
+  <div class="add-bar">
+    <div class="qty-ctrl">
+      <button onclick="alterarQtyProd(-1)"><i class="fas fa-minus" style="font-size:.7rem"></i></button>
+      <span class="qty-val" id="prodQty">1</span>
+      <button onclick="alterarQtyProd(1)"><i class="fas fa-plus" style="font-size:.7rem"></i></button>
+    </div>
+    <div class="add-total">
+      <span>Total</span>
+      <strong id="prodTotal">R$ 0,00</strong>
+    </div>
+    <button class="btn-adicionar" onclick="adicionarAoCarrinho()">Adicionar</button>
+  </div>
+</div>
+
+<!-- =========================================
+     P2 — CARRINHO
+     ========================================= -->
+<div class="page" id="page-carrinho">
+  <div class="checkout-topbar">
+    <button class="back-btn" onclick="voltarParaLoja()"><i class="fas fa-arrow-left"></i></button>
+    <span class="page-title">Carrinho</span>
+    <button class="right-action" onclick="limparCarrinho()">Limpar</button>
+  </div>
+  <div class="page-body" id="carrinho-lista"></div>
+  <div class="bottom-bar">
+    <div class="subtotal-row">
+      <span>Subtotal</span>
+      <strong id="cart-subtotal">R$ 0,00</strong>
+    </div>
+    <button class="btn-red" onclick="irPara('page-entrega')">Continuar</button>
+  </div>
+</div>
+
+<!-- =========================================
+     P3 — OPÇÕES DE ENTREGA
+     ========================================= -->
+<div class="page" id="page-entrega">
+  <div class="checkout-topbar">
+    <button class="back-btn" onclick="irPara('page-carrinho')"><i class="fas fa-arrow-left"></i></button>
+    <span class="page-title">Op&ccedil;&otilde;es de entrega</span>
+    <span class="right-action"></span>
+  </div>
+  <div class="page-body">
+    <div class="option-card" onclick="selecionarEntrega('entrega')">
+      <div class="option-card-left">
+        <div class="option-icon red"><i class="fas fa-motorcycle"></i></div>
+        <div class="option-card-text">
+          <h4>Entrega</h4>
+          <p>Receba em seu endere&ccedil;o</p>
+        </div>
+      </div>
+      <i class="fas fa-chevron-right chevron"></i>
+    </div>
+    <div class="option-card" onclick="selecionarEntrega('retirada')">
+      <div class="option-card-left">
+        <div class="option-icon gray"><i class="fas fa-store"></i></div>
+        <div class="option-card-text">
+          <h4>Retirada</h4>
+          <p>Retire no estabelecimento</p>
+        </div>
+      </div>
+      <i class="fas fa-chevron-right chevron"></i>
+    </div>
+    <div class="option-card" onclick="selecionarEntrega('local')">
+      <div class="option-card-left">
+        <div class="option-icon red"><i class="fas fa-utensils"></i></div>
+        <div class="option-card-text">
+          <h4>Consumo no local</h4>
+          <p>Consumir no estabelecimento</p>
+        </div>
+      </div>
+      <i class="fas fa-chevron-right chevron"></i>
+    </div>
+  </div>
+  <div class="bottom-bar">
+    <div class="subtotal-row">
+      <span>Subtotal</span>
+      <strong id="entrega-subtotal">R$ 0,00</strong>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================
+     P4 — ENDEREÇO DE ENTREGA
+     ========================================= -->
+<div class="page" id="page-endereco">
+  <div class="checkout-topbar">
+    <button class="back-btn" onclick="irPara('page-entrega')"><i class="fas fa-arrow-left"></i></button>
+    <span class="page-title">Endere&ccedil;o de entrega</span>
+    <span class="right-action"></span>
+  </div>
+  <div class="page-body">
+    <div class="form-section">
+      <div class="form-row">
+        <div class="form-group">
+          <label>CEP</label>
+          <input type="text" id="cep" placeholder="00000-000" maxlength="9" oninput="mascaraCEP(this)" onblur="buscarCEP()">
+        </div>
+        <div></div>
+      </div>
+      <div class="form-group">
+        <label>Endere&ccedil;o <span class="required">*</span></label>
+        <input type="text" id="logradouro" placeholder="Digite a rua, avenida, travessa...">
+      </div>
+      <div class="form-row-3">
+        <div class="form-group">
+          <label>N&uacute;mero <span class="required">*</span></label>
+          <input type="text" id="numero" placeholder="N&ordm;">
+        </div>
+        <div class="form-group" style="grid-column:span 2">
+          <label>Complemento</label>
+          <input type="text" id="complemento" placeholder="Ap, bloco...">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Bairro <span class="required">*</span></label>
+        <input type="text" id="bairro" placeholder="Digite o bairro">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>UF <span class="required">*</span></label>
+          <input type="text" id="uf" placeholder="SP" maxlength="2">
+        </div>
+        <div class="form-group">
+          <label>Cidade <span class="required">*</span></label>
+          <input type="text" id="cidade" placeholder="Digite a cidade">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Refer&ecirc;ncia</label>
+        <input type="text" id="referencia" placeholder="Digite uma refer&ecirc;ncia">
+      </div>
+    </div>
+  </div>
+  <div class="bottom-bar">
+    <button class="btn-red" onclick="confirmarEndereco()">Continuar para o pagamento</button>
+  </div>
+</div>
+
+<!-- =========================================
+     P5 — TIPO DE PAGAMENTO
+     ========================================= -->
+<div class="page" id="page-pagamento-tipo">
+  <div class="checkout-topbar">
+    <button class="back-btn" id="pgto-back-btn" onclick="voltarDePagamento()"><i class="fas fa-arrow-left"></i></button>
+    <span class="page-title">Op&ccedil;&otilde;es de pagamento</span>
+    <span class="right-action"></span>
+  </div>
+  <div class="page-body">
+    <div class="option-card" onclick="irPara('page-pagamento-metodo')">
+      <div class="option-card-left">
+        <div class="option-icon green"><i class="fas fa-dollar-sign"></i></div>
+        <div class="option-card-text">
+          <h4>Pagar na entrega</h4>
+          <p>Pague no momento da entrega</p>
+        </div>
+      </div>
+      <i class="fas fa-chevron-right chevron"></i>
+    </div>
+    <div class="option-card disabled">
+      <div class="option-card-left">
+        <div class="option-icon gray"><i class="fas fa-mobile-alt"></i></div>
+        <div class="option-card-text">
+          <h4>Pagar agora</h4>
+          <p>Pague agora pelo aplicativo</p>
+        </div>
+      </div>
+      <i class="fas fa-chevron-right chevron"></i>
+    </div>
+  </div>
+  <div class="bottom-bar">
+    <div class="subtotal-row">
+      <span>Taxa de entrega</span>
+      <strong id="pgto-taxa" class="add">+ R$ 0,00</strong>
+    </div>
+    <div class="subtotal-row" style="margin-bottom:0">
+      <span>Subtotal</span>
+      <strong id="pgto-subtotal">R$ 0,00</strong>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================
+     P6 — MÉTODO DE PAGAMENTO
+     ========================================= -->
+<div class="page" id="page-pagamento-metodo">
+  <div class="checkout-topbar">
+    <button class="back-btn" onclick="irPara('page-pagamento-tipo')"><i class="fas fa-arrow-left"></i></button>
+    <span class="page-title">M&eacute;todo de pagamento</span>
+    <span class="right-action"></span>
+  </div>
+  <div class="page-body">
+    <div class="option-card" onclick="selecionarPagamento('cartao')">
+      <div class="option-card-left">
+        <div class="option-icon blue"><i class="fas fa-credit-card"></i></div>
+        <div class="option-card-text">
+          <h4>Cart&atilde;o de cr&eacute;dito</h4>
+          <p>D&eacute;bito ou cr&eacute;dito</p>
+        </div>
+      </div>
+      <i class="fas fa-chevron-right chevron"></i>
+    </div>
+    <div class="option-card" onclick="selecionarPagamento('pix')">
+      <div class="option-card-left">
+        <div class="option-icon pix"><i class="fas fa-qrcode"></i></div>
+        <div class="option-card-text">
+          <h4>PIX</h4>
+          <p>Pagamento instant&acirc;neo</p>
+        </div>
+      </div>
+      <i class="fas fa-chevron-right chevron"></i>
+    </div>
+    <div class="option-card" onclick="selecionarPagamento('dinheiro')">
+      <div class="option-card-left">
+        <div class="option-icon red"><i class="fas fa-money-bill-wave"></i></div>
+        <div class="option-card-text">
+          <h4>Dinheiro</h4>
+          <p>Pagamento em esp&eacute;cie</p>
+        </div>
+      </div>
+      <i class="fas fa-chevron-right chevron"></i>
+    </div>
+  </div>
+  <div class="bottom-bar">
+    <div class="subtotal-row">
+      <span>Taxa de entrega</span>
+      <strong id="metodo-taxa" class="add">+ R$ 0,00</strong>
+    </div>
+    <div class="subtotal-row" style="margin-bottom:0">
+      <span>Subtotal</span>
+      <strong id="metodo-subtotal">R$ 0,00</strong>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================
+     P7 — DADOS DO CLIENTE
+     ========================================= -->
+<div class="page" id="page-dados">
+  <div class="checkout-topbar">
+    <button class="back-btn" onclick="irPara('page-pagamento-metodo')"><i class="fas fa-arrow-left"></i></button>
+    <span class="page-title">Insira seus dados</span>
+    <span class="right-action"></span>
+  </div>
+  <div class="page-body">
+    <div class="form-section">
+      <div class="form-group">
+        <label>Nome <span class="required">*</span></label>
+        <input type="text" id="clienteNome" placeholder="Insira seu nome">
+      </div>
+      <div class="form-group">
+        <label>Telefone <span class="required">*</span></label>
+        <div class="phone-row">
+          <div class="phone-flag">&#127463;&#127479; +55</div>
+          <input type="tel" id="clienteTel" placeholder="(11) 90000-0000" style="flex:1" oninput="mascaraTel(this)">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" id="clienteEmail" placeholder="Insira seu e-mail">
+      </div>
+      <div class="form-group">
+        <label>CPF/CNPJ</label>
+        <input type="text" id="clienteCPF" placeholder="Insira seu CPF ou CNPJ" oninput="mascaraCPF(this)">
+      </div>
+    </div>
+  </div>
+  <div class="bottom-bar">
+    <button class="btn-red" onclick="confirmarDados()">Confirmar</button>
+  </div>
+</div>
+
+<!-- =========================================
+     P8 — REVISAR PEDIDO
+     ========================================= -->
+<div class="page" id="page-revisar">
+  <div class="checkout-topbar">
+    <button class="back-btn" onclick="irPara('page-dados')"><i class="fas fa-arrow-left"></i></button>
+    <span class="page-title">Revisar pedido</span>
+    <button class="right-action" onclick="voltarParaLoja()"><i class="fas fa-home"></i></button>
+  </div>
+  <div class="page-body">
+    <!-- Cliente -->
+    <div class="review-section" id="rev-cliente"></div>
+    <!-- Entrega -->
+    <div class="review-section" id="rev-entrega"></div>
+    <!-- Pagamento -->
+    <div class="review-section" id="rev-pagamento"></div>
+    <!-- Cupom -->
+    <div class="cupom-section">
+      <div class="cupom-toggle" onclick="toggleCupom()">
+        <span><i class="fas fa-ticket-alt" style="margin-right:6px;color:var(--red)"></i> Tem um cupom de desconto?</span>
+        <i class="fas fa-chevron-down" id="cupomChevron"></i>
+      </div>
+      <div id="cupomBox" style="display:none;margin-top:10px">
+        <div style="display:flex;gap:8px">
+          <input type="text" id="cupomInput" placeholder="Digite o cupom" style="flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;outline:none">
+          <button onclick="aplicarCupom()" style="padding:10px 16px;background:var(--red);color:#fff;border-radius:8px;font-weight:700;font-size:.85rem">Aplicar</button>
+        </div>
+      </div>
+    </div>
+    <!-- Totais -->
+    <div class="totals-section" id="rev-totais"></div>
+  </div>
+  <div class="bottom-bar">
+    <button class="btn-red" onclick="fazerPedido()">Fazer pedido</button>
+  </div>
+</div>
+
+<!-- =========================================
+     P9 — CONFIRMAÇÃO
+     ========================================= -->
+<div class="page" id="page-confirmacao">
+  <div class="checkout-topbar">
+    <button class="back-btn" onclick="voltarParaLoja()"><i class="fas fa-arrow-left"></i></button>
+    <span class="page-title">Detalhes do pedido</span>
+    <div style="display:flex;gap:12px">
+      <button onclick="voltarParaLoja()" style="color:var(--muted);font-size:.8rem"><i class="fas fa-home"></i> In&iacute;cio</button>
+      <button style="color:var(--red);font-size:.8rem;font-weight:700"><i class="fas fa-receipt"></i> Pedido</button>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="confirm-body" id="confirmBody"></div>
+  </div>
+</div>
+
+<!-- MODAL TROCO -->
+<div class="modal-bg" id="modalTroco">
+  <div class="modal-box">
+    <h3>Troco para quanto?</h3>
+    <p>Informe o valor que voc&ecirc; vai pagar em dinheiro.</p>
+    <p style="font-size:.82rem;color:var(--red);font-weight:700;margin-bottom:10px" id="trocoValorPedido"></p>
+    <input type="number" id="trocoInput" placeholder="R$ 0,00" min="0" step="0.01">
+    <button class="btn-modal-confirm" onclick="confirmarTroco()">Confirmar</button>
+    <button class="btn-modal-cancel" onclick="fecharModal()">Cancelar</button>
+  </div>
+</div>
+
+<script src="carrinho.js"></script>
+</body>
+</html>

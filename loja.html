@@ -1,0 +1,154 @@
+e<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dados da loja &ndash; Point da Aldeia</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;
+  --border:rgba(255,255,255,.10);--primary:#e8560a;
+  --text:#ffffff;--text2:#aaa;--success:#22d47a;--danger:#ff4466;
+  --radius:12px;--shadow:0 8px 32px rgba(0,0,0,.5);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+a{text-decoration:none;color:inherit;}
+
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center;padding:0 1.25rem;}
+.topbar-logo{font-size:.95rem;font-weight:800;display:flex;align-items:center;gap:.4rem;}
+.topbar-logo span{color:var(--primary);}
+
+.loja-wrap{max-width:680px;margin:2rem auto;padding:0 1rem 4rem;}
+
+.loja-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+
+.loja-nav{display:flex;align-items:center;gap:1rem;padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);}
+.back-btn{width:32px;height:32px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:.85rem;flex-shrink:0;transition:all .2s;}
+.back-btn:hover{border-color:var(--primary);color:var(--primary);}
+.nav-title{font-size:.95rem;color:var(--text2);}
+.nav-title strong{color:var(--text);}
+
+.loja-body{padding:1.5rem 1.4rem;}
+
+.loja-name{font-size:1.25rem;font-weight:800;margin-bottom:1.2rem;letter-spacing:.03em;}
+
+.loja-actions{display:flex;align-items:center;gap:.75rem;margin-bottom:2rem;}
+.btn-wa-loja{width:52px;height:52px;background:var(--primary);color:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;border:none;cursor:pointer;transition:background .2s;}
+.btn-wa-loja:hover{background:var(--primary-d,#c44308);}
+
+.status-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1.1rem;border-radius:50px;font-size:.85rem;font-weight:700;}
+.status-badge.open{background:rgba(34,212,122,.12);color:var(--success);border:1px solid rgba(34,212,122,.25);}
+.status-badge.closed{background:rgba(255,68,102,.1);color:var(--danger);border:1px solid rgba(255,68,102,.2);}
+
+.section-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--primary);margin-bottom:.75rem;}
+
+.horarios-table{width:100%;border-collapse:collapse;margin-bottom:1.75rem;}
+.horarios-table tr{border-bottom:1px solid var(--border);}
+.horarios-table tr:last-child{border-bottom:none;}
+.horarios-table tr.hoje td{font-weight:800;color:var(--text);}
+.horarios-table td{padding:.7rem .3rem;font-size:.875rem;}
+.horarios-table td:first-child{color:var(--text2);}
+.horarios-table td:last-child{text-align:right;font-weight:600;color:var(--primary);}
+.horarios-table tr.hoje td:first-child{color:var(--text);}
+
+.endereco-wrap{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.9rem;}
+.endereco-wrap p{font-size:.88rem;color:var(--text2);}
+.endereco-wrap p.dest{color:var(--text);font-weight:600;}
+
+.map-link{display:inline-flex;align-items:center;gap:.5rem;color:var(--primary);font-size:.85rem;font-weight:700;margin-top:.2rem;}
+.map-link:hover{text-decoration:underline;}
+
+.contato-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1.5rem;}
+.contato-item{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem;display:flex;align-items:center;gap:.75rem;transition:border-color .2s;}
+.contato-item:hover{border-color:var(--primary);}
+.contato-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.contato-icon.wa{background:rgba(37,211,102,.15);color:#25D366;}
+.contato-icon.ig{background:rgba(232,86,10,.15);color:var(--primary);}
+.contato-icon.fb{background:rgba(66,103,178,.2);color:#6b9ee8;}
+.contato-icon.mp{background:rgba(232,86,10,.15);color:var(--primary);}
+.contato-text{font-size:.8rem;}
+.contato-text strong{display:block;font-size:.88rem;color:var(--text);margin-bottom:.1rem;}
+.contato-text span{color:var(--text2);}
+
+@media(max-width:480px){.contato-grid{grid-template-columns:1fr;}.loja-wrap{padding:0 .75rem 3rem;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">&#127869; <span>POINT</span>&nbsp;DA ALDEIA</div>
+</div>
+
+<div class="loja-wrap">
+  <div class="loja-card">
+
+    <div class="loja-nav">
+      <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+      <span class="nav-title"><strong>Dados</strong> da loja</span>
+    </div>
+
+    <div class="loja-body">
+      <h1 class="loja-name">POINT DA ALDEIA</h1>
+
+      <div class="loja-actions">
+        <a href="https://wa.me/5513997886293" target="_blank" class="btn-wa-loja" title="WhatsApp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+        <div class="status-badge" id="lojaStatus"></div>
+      </div>
+
+      <!-- Horarios -->
+      <div class="section-label">Hor&aacute;rios de funcionamento</div>
+      <table class="horarios-table" id="horTable">
+        <tbody>
+          <tr data-dia="0"><td>Domingo</td><td>11:00 &ndash; 20:00</td></tr>
+          <tr data-dia="1"><td>Segunda-feira</td><td>11:00 &ndash; 20:00</td></tr>
+          <tr data-dia="2"><td>Ter&ccedil;a-feira</td><td>11:00 &ndash; 20:00</td></tr>
+          <tr data-dia="3"><td>Quarta-feira</td><td>11:00 &ndash; 20:00</td></tr>
+          <tr data-dia="4"><td>Quinta-feira</td><td>11:00 &ndash; 20:00</td></tr>
+          <tr data-dia="5"><td>Sexta-feira</td><td>11:00 &ndash; 20:00</td></tr>
+          <tr data-dia="6"><td>S&aacute;bado</td><td>11:00 &ndash; 20:00</td></tr>
+        </tbody>
+      </table>
+
+      <!-- Endereco -->
+      <div class="section-label">Endere&ccedil;o da empresa</div>
+      <div class="endereco-wrap">
+        <p class="dest">Point da Aldeia</p>
+        <p>Aldeia, Brasil</p>
+        <a href="https://maps.app.goo.gl/3Fhbeh4ubEvN22kW8" target="_blank" class="map-link">
+          <i class="fas fa-map"></i> Ver no mapa
+        </a>
+      </div>
+
+      <!-- Contatos -->
+      <div class="section-label" style="margin-top:1.5rem;">Contatos &amp; Redes</div>
+      <div class="contato-grid">
+        <a href="https://wa.me/5513997886293" target="_blank" class="contato-item">
+          <div class="contato-icon wa"><i class="fab fa-whatsapp"></i></div>
+          <div class="contato-text"><strong>WhatsApp</strong><span>(13) 99788-6293</span></div>
+        </a>
+        <a href="https://instagram.com/pointdaaldeia" target="_blank" class="contato-item">
+          <div class="contato-icon ig"><i class="fab fa-instagram"></i></div>
+          <div class="contato-text"><strong>Instagram</strong><span>@pointdaaldeia</span></div>
+        </a>
+        <a href="https://facebook.com/pointdaaldeia" target="_blank" class="contato-item">
+          <div class="contato-icon fb"><i class="fab fa-facebook"></i></div>
+          <div class="contato-text"><strong>Facebook</strong><span>/pointdaaldeia</span></div>
+        </a>
+        <a href="https://maps.app.goo.gl/3Fhbeh4ubEvN22kW8" target="_blank" class="contato-item">
+          <div class="contato-icon mp"><i class="fas fa-map-marker-alt"></i></div>
+          <div class="contato-text"><strong>Google Maps</strong><span>Ver localiza&ccedil;&atilde;o</span></div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

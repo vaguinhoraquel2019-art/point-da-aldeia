@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Point da Aldeia – Painel de Setup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #0f0f0f;
+      color: #f0ece4;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+    }
+
+    .logo {
+      font-size: 2rem;
+      margin-bottom: 6px;
+    }
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .subtitle {
+      color: #9a9080;
+      font-size: 0.9rem;
+      margin-bottom: 48px;
+    }
+
+    .cards {
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 740px;
+      width: 100%;
+    }
+
+    .card {
+      background: #1c1c1c;
+      border: 1px solid #2e2e2e;
+      border-radius: 18px;
+      padding: 36px 32px;
+      flex: 1;
+      min-width: 280px;
+      max-width: 340px;
+      text-align: center;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .card:hover { border-color: #e8560a; transform: translateY(-4px); }
+
+    .card-icon {
+      font-size: 2.6rem;
+      margin-bottom: 18px;
+    }
+    .card-icon.install { color: #e8560a; }
+    .card-icon.deploy  { color: #25D366; }
+
+    .card h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+    .card p {
+      font-size: 0.85rem;
+      color: #9a9080;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 26px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .btn:hover { transform: scale(1.04); }
+    .btn-install { background: #e8560a; color: #fff; }
+    .btn-install:hover { background: #ff7a35; }
+    .btn-deploy  { background: #25D366; color: #fff; }
+    .btn-deploy:hover  { background: #1ebe5d; }
+
+    .steps {
+      margin-top: 20px;
+      text-align: left;
+    }
+    .steps li {
+      font-size: 0.8rem;
+      color: #6b6560;
+      margin: 4px 0;
+      list-style: none;
+      padding-left: 18px;
+      position: relative;
+    }
+    .steps li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: #e8560a;
+    }
+
+    .divider {
+      width: 100%;
+      max-width: 740px;
+      border: none;
+      border-top: 1px solid #2e2e2e;
+      margin: 48px 0 28px;
+    }
+
+    .manual-section {
+      text-align: center;
+      max-width: 640px;
+    }
+    .manual-section h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    .manual-section p {
+      font-size: 0.85rem;
+      color: #9a9080;
+      margin-bottom: 16px;
+    }
+
+    .code-block {
+      background: #111;
+      border: 1px solid #2e2e2e;
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-align: left;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      color: #e8560a;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .code-block span.comment { color: #555; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 32px;
+      font-size: 0.85rem;
+      color: #9a9080;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .back-link:hover { color: #e8560a; }
+  </style>
+</head>
+<body>
+
+  <div class="logo">🍽</div>
+  <h1>Point da Aldeia</h1>
+  <p class="subtitle">Painel de configuração e publicação do site</p>
+
+  <div class="cards">
+
+    <!-- Card 1: Instalar -->
+    <div class="card">
+      <div class="card-icon install">
+        <i class="fas fa-download"></i>
+      </div>
+      <h2>Instalar Dependências</h2>
+      <p>Instala o Node.js e o Netlify CLI — tudo que é necessário para publicar seu site gratuitamente.</p>
+      <a href="1-INSTALAR.bat" class="btn btn-install" download>
+        <i class="fas fa-play"></i> Instalar Tudo
+      </a>
+      <ul class="steps">
+        <li>Verifica se Node.js está instalado</li>
+        <li>Se não, abre o download automático</li>
+        <li>Instala o Netlify CLI via npm</li>
+      </ul>
+    </div>
+
+    <!-- Card 2: Publicar -->
+    <div class="card">
+      <div class="card-icon deploy">
+        <i class="fas fa-rocket"></i>
+      </div>
+      <h2>Deixar o Site Online</h2>
+      <p>Publica o site na Netlify em menos de 1 minuto. Você recebe um link público gratuito para compartilhar.</p>
+      <a href="2-PUBLICAR.bat" class="btn btn-deploy" download>
+        <i class="fas fa-globe"></i> Publicar Site
+      </a>
+      <ul class="steps">
+        <li>Faz login na Netlify (grátis)</li>
+        <li>Sobe os arquivos automaticamente</li>
+        <li>Gera um link público para o site</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <hr class="divider" />
+
+  <!-- Instruções manuais -->
+  <div class="manual-section">
+    <h3>Ou rode manualmente no terminal</h3>
+    <p>Abra o PowerShell ou Prompt de Comando na pasta do projeto e execute:</p>
+
+    <div class="code-block">
+      <span class="comment"># 1. Instalar Netlify CLI</span><br>
+      npm install -g netlify-cli
+    </div>
+
+    <div class="code-block">
+      <span class="comment"># 2. Fazer login</span><br>
+      netlify login
+    </div>
+
+    <div class="code-block">
+      <span class="comment"># 3. Publicar o site</span><br>
+      netlify deploy --dir=. --prod
+    </div>
+
+    <p style="margin-top:14px; font-size:0.8rem;">
+      Crie sua conta gratuita em
+      <a href="https://netlify.com" target="_blank" style="color:#e8560a;">netlify.com</a>
+      antes de publicar.
+    </p>
+  </div>
+
+  <a href="index.html" class="back-link">
+    <i class="fas fa-arrow-left"></i> Voltar ao site
+  </a>
+
+</body>
+</html>

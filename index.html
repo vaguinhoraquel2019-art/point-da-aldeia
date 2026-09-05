@@ -1,0 +1,1480 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>POINT DA ALDEIA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ===================== LOJA (dark) ===================== */
+:root{
+  --bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;--card:#141414;
+  --border:rgba(255,255,255,.10);--primary:#e8560a;--primary-d:#c44308;
+  --text:#ffffff;--text2:#aaa;--success:#22d47a;--danger:#ff4466;
+  --radius:10px;--shadow:0 8px 32px rgba(0,0,0,.5);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+a{text-decoration:none;color:inherit;}
+button{font-family:inherit;cursor:pointer;}
+
+/* TOPBAR */
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);height:58px;display:flex;align-items:center;gap:1rem;padding:0 1.5rem;position:sticky;top:0;z-index:100;}
+.topbar-logo{font-size:1.05rem;font-weight:800;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:.5rem;}
+.topbar-logo span{color:var(--primary);}
+.topbar-search{flex:1;max-width:400px;position:relative;display:flex;align-items:center;}
+.topbar-search i{position:absolute;left:.75rem;font-size:.82rem;pointer-events:none;opacity:.4;}
+.topbar-search input{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:.48rem .85rem .48rem 2.2rem;border-radius:20px;font-size:.875rem;font-family:inherit;outline:none;transition:border .2s;}
+.topbar-search input:focus{border-color:var(--primary);}
+.topbar-right{display:flex;align-items:center;gap:.6rem;margin-left:auto;flex-shrink:0;}
+.btn-dados{background:transparent;border:1px solid var(--border);color:var(--text2);padding:.4rem .9rem;border-radius:8px;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:.4rem;transition:all .2s;}
+.btn-dados:hover{border-color:var(--primary);color:var(--primary);}
+/* BOTÃO CARRINHO NA TOPBAR */
+.btn-cart-top{position:relative;background:var(--primary);color:#fff;border:none;padding:.42rem 1rem;border-radius:8px;font-size:.88rem;font-weight:700;display:flex;align-items:center;gap:.5rem;cursor:pointer;transition:background .2s;}
+.btn-cart-top:hover{background:var(--primary-d);}
+.btn-cart-top .ct-badge{background:#fff;color:var(--primary);font-size:.65rem;font-weight:800;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;margin-left:2px;}
+.btn-cart-top .ct-badge.hidden{display:none;}
+
+/* TICKER */
+.ticker-wrap{width:100%;overflow:hidden;background:linear-gradient(90deg,#1a0a00,#200d00,#1a0a00);border-bottom:1px solid rgba(232,86,10,.25);padding:.38rem 0;position:relative;}
+.ticker-wrap::before,.ticker-wrap::after{content:'';position:absolute;top:0;width:60px;height:100%;z-index:2;}
+.ticker-wrap::before{left:0;background:linear-gradient(to right,#140800,transparent);}
+.ticker-wrap::after{right:0;background:linear-gradient(to left,#140800,transparent);}
+.ticker-track{display:inline-flex;align-items:center;gap:1.5rem;white-space:nowrap;animation:ticker 35s linear infinite;}
+.ticker-track:hover{animation-play-state:paused;}
+.ticker-item{font-size:.78rem;font-weight:500;color:#ffccaa;letter-spacing:.04em;text-transform:uppercase;}
+.ticker-item strong{color:#fff;font-weight:800;}
+.ticker-sep{color:rgba(232,86,10,.5);font-size:.7rem;}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* STORE HEADER */
+.store-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:1.2rem 1.5rem .9rem;}
+.store-header-top{display:flex;align-items:center;gap:1rem;margin-bottom:.6rem;}
+.store-avatar{width:56px;height:56px;border-radius:12px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;}
+.store-info h1{font-size:1.15rem;font-weight:800;margin-bottom:.2rem;}
+.store-meta{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;font-size:.8rem;color:var(--text2);}
+.store-meta a{color:var(--primary);}
+.store-meta a:hover{text-decoration:underline;}
+.status-pill{display:inline-flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:700;padding:.2rem .65rem;border-radius:50px;}
+.status-pill.open{background:rgba(34,212,122,.12);color:var(--success);border:1px solid rgba(34,212,122,.25);}
+.status-pill.closed{background:rgba(255,68,102,.1);color:var(--danger);border:1px solid rgba(255,68,102,.2);}
+.btn-share{background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:.38rem .75rem;border-radius:8px;font-size:.8rem;display:flex;align-items:center;gap:.4rem;}
+.btn-share:hover{border-color:var(--primary);color:var(--primary);}
+
+/* CAT BAR */
+.cat-bar-wrap{background:var(--bg2);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;position:sticky;top:58px;z-index:90;}
+.cat-bar-wrap::-webkit-scrollbar{display:none;}
+.cat-bar{display:flex;padding:.5rem 1.25rem;gap:.4rem;min-width:max-content;}
+.cat-btn{background:transparent;border:1px solid transparent;color:var(--text2);padding:.5rem 1.1rem;border-radius:20px;font-size:.85rem;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:.4rem;transition:all .18s;}
+.cat-btn:hover{background:var(--bg3);color:var(--text);}
+.cat-btn.active{background:var(--primary);border-color:var(--primary);color:#fff;}
+
+/* PRODUTOS */
+.products-area{padding:1.5rem;flex:1;}
+.cat-section{margin-bottom:2.5rem;}
+.cat-section-title{font-size:1rem;font-weight:800;margin-bottom:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem;}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.25rem;}
+.product-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:transform .2s,box-shadow .2s,border-color .2s;cursor:pointer;}
+.product-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.6);border-color:rgba(232,86,10,.4);}
+.product-card.hidden{display:none;}
+.card-img{width:100%;height:140px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative;overflow:hidden;}
+.card-img .bg-gradient{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(232,86,10,.15),transparent 70%);}
+.card-body{padding:.9rem;}
+.card-cat{font-size:.7rem;color:var(--primary);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem;}
+.card-body h3{font-size:.9rem;font-weight:700;line-height:1.3;margin-bottom:.3rem;}
+.card-desc{font-size:.78rem;color:var(--text2);margin-bottom:.65rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.45;}
+.card-price{font-size:1.05rem;font-weight:800;color:var(--success);margin-bottom:.7rem;}
+.card-actions{display:flex;gap:.5rem;}
+.btn-pedir{flex:1;background:var(--primary);color:#fff;border:none;padding:.5rem;border-radius:8px;font-weight:700;font-size:.82rem;display:flex;align-items:center;justify-content:center;gap:.35rem;transition:background .2s;cursor:pointer;}
+.btn-pedir:hover{background:var(--primary-d);}
+.empty-state{grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--text2);}
+.empty-state i{font-size:3rem;margin-bottom:1rem;display:block;opacity:.4;}
+.footer{text-align:center;padding:2rem 1.5rem;color:var(--text2);font-size:.8rem;border-top:1px solid var(--border);margin-top:auto;}
+
+/* MODAL PRODUTO (loja) */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:400;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.loja-modal{background:var(--bg2);border:1px solid var(--border);border-radius:14px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;position:relative;box-shadow:var(--shadow);}
+.loja-modal-img{width:100%;height:200px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;}
+.loja-modal-body{padding:1.5rem;}
+.loja-modal-body h2{font-size:1.25rem;font-weight:800;margin-bottom:.5rem;}
+.loja-modal-price{font-size:1.4rem;font-weight:800;color:var(--success);margin-bottom:.5rem;}
+.loja-modal-cat{font-size:.75rem;color:var(--primary);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem;}
+.loja-modal-desc{font-size:.875rem;color:var(--text2);line-height:1.65;margin-bottom:1.5rem;}
+.btn-close-loja-modal{position:absolute;top:.9rem;right:.9rem;background:var(--bg3);border:1px solid var(--border);color:var(--text2);width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.9rem;z-index:1;cursor:pointer;}
+.loja-modal-actions{display:flex;gap:.75rem;}
+.btn-add-modal{flex:1;background:var(--primary);color:#fff;border:none;padding:.75rem;border-radius:10px;font-size:.95rem;font-weight:800;cursor:pointer;}
+.btn-add-modal:hover{background:var(--primary-d);}
+.btn-close-modal-sec{background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:.75rem 1.2rem;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;}
+
+/* TOAST */
+.toast-wrap{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:.4rem;align-items:center;pointer-events:none;}
+.toast{background:var(--bg2);border:1px solid var(--border);padding:.65rem 1.1rem;border-radius:10px;font-size:.85rem;min-width:200px;text-align:center;box-shadow:var(--shadow);animation:fadeUp .3s ease;}
+.toast.success{border-color:var(--success);color:var(--success);}
+.toast.error{border-color:var(--danger);color:var(--danger);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+@media(max-width:600px){
+  .topbar{padding:0 .75rem;gap:.5rem;}
+  .topbar-logo{font-size:.88rem;}
+  .btn-dados span{display:none;}
+  .products-area{padding:.75rem;}
+  .products-grid{grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:.75rem;}
+  .card-img{height:110px;font-size:2.2rem;}
+  .store-header{padding:.9rem .75rem .75rem;}
+}
+
+/* ===================== DRAWER DO CARRINHO ===================== */
+#drawer-bg{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;
+  backdrop-filter:blur(2px);
+}
+#drawer-bg.open{display:block;}
+
+#cart-drawer{
+  position:fixed;top:0;right:-100%;bottom:0;
+  width:100%;max-width:520px;
+  background:#f2f2f2;
+  z-index:501;
+  display:flex;flex-direction:column;
+  transition:right .3s cubic-bezier(.25,.8,.25,1);
+  overflow:hidden;
+  font-family:'Inter',sans-serif;
+}
+#cart-drawer.open{right:0;}
+
+/* Variáveis do drawer (tema claro) */
+#cart-drawer{
+  --dr-red:var(--primary);--dr-red-d:var(--primary-d);--dr-bg:#f2f2f2;--dr-white:#fff;
+  --dr-border:#e5e5e5;--dr-text:#1a1a1a;--dr-muted:#888;--dr-radius:10px;
+  --dr-success:#22c55e;
+}
+
+/* Páginas do drawer */
+.dr-page{display:none;flex-direction:column;height:100%;}
+.dr-page.active{display:flex;}
+
+/* Topbar do drawer */
+.dr-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;border-bottom:1px solid var(--dr-border);
+  background:var(--dr-white);min-height:52px;flex-shrink:0;
+}
+.dr-back{width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--dr-red);font-size:1rem;cursor:pointer;border:none;background:none;}
+.dr-title{font-size:.95rem;font-weight:700;color:var(--dr-text);flex:1;text-align:center;}
+.dr-action{font-size:.82rem;font-weight:700;color:var(--dr-red);cursor:pointer;border:none;background:none;min-width:32px;text-align:right;}
+
+/* Body rolável */
+.dr-body{flex:1;overflow-y:auto;}
+
+/* Bottom bar */
+.dr-bottom{padding:12px 16px;border-top:1px solid var(--dr-border);background:var(--dr-white);flex-shrink:0;}
+.dr-sub-row{display:flex;justify-content:space-between;font-size:.82rem;color:var(--dr-muted);margin-bottom:8px;}
+.dr-sub-row strong{color:var(--dr-text);}
+.dr-btn{width:100%;padding:14px;background:var(--dr-red);color:#fff;border:none;border-radius:var(--dr-radius);font-size:1rem;font-weight:700;cursor:pointer;transition:background .2s;font-family:'Inter',sans-serif;}
+.dr-btn:hover{background:var(--dr-red-d);}
+.dr-btn:disabled{background:#ccc;cursor:not-allowed;}
+
+
+/* Itens do carrinho */
+.cart-item{display:flex;align-items:flex-start;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--dr-border);gap:10px;background:var(--dr-white);}
+.ci-info h4{font-size:.9rem;font-weight:700;color:var(--dr-text);margin-bottom:3px;}
+.ci-info .obs{font-size:.75rem;color:var(--dr-muted);margin-bottom:5px;}
+.ci-info .price{font-size:.88rem;font-weight:700;color:var(--dr-text);}
+.ci-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+.ci-alterar{font-size:.75rem;font-weight:700;color:var(--dr-red);cursor:pointer;border:none;background:none;}
+.qty-ctrl{display:flex;align-items:center;gap:6px;border:1.5px solid var(--dr-border);border-radius:8px;overflow:hidden;}
+.qty-ctrl button{width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--dr-red);cursor:pointer;border:none;background:none;font-size:.8rem;}
+.qty-ctrl .qv{font-size:.88rem;font-weight:700;min-width:18px;text-align:center;color:var(--dr-text);}
+.add-more{display:block;text-align:center;padding:14px 16px;color:var(--dr-red);font-size:.88rem;font-weight:700;cursor:pointer;border:none;background:none;width:100%;}
+
+/* Produto detalhe */
+.prod-img-dr{width:100%;height:200px;background:#f0ebe6;display:flex;align-items:center;justify-content:center;font-size:5rem;}
+.prod-body-dr{padding:16px;}
+.prod-body-dr h2{font-size:1.1rem;font-weight:800;color:var(--dr-text);margin-bottom:4px;}
+.prod-price-dr{font-size:.9rem;color:var(--dr-muted);margin-bottom:14px;}
+.prod-price-dr span{color:var(--dr-red);font-weight:700;}
+.obs-label{font-size:.88rem;font-weight:700;color:var(--dr-text);margin-bottom:8px;}
+.obs-input{width:100%;padding:12px;border:1.5px solid var(--dr-border);border-radius:8px;font-size:.88rem;color:var(--dr-text);resize:none;min-height:70px;outline:none;font-family:'Inter',sans-serif;}
+.obs-input:focus{border-color:var(--dr-red);}
+.add-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--dr-border);background:var(--dr-white);flex-shrink:0;}
+.add-bar .qty-ctrl button{width:34px;height:34px;}
+.add-total-info{font-size:.75rem;color:var(--dr-muted);}
+.add-total-info strong{display:block;font-size:.88rem;color:var(--dr-text);}
+.btn-add-dr{padding:11px 24px;background:var(--dr-red);color:#fff;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;}
+.btn-add-dr:hover{background:var(--dr-red-d);}
+
+/* Option cards */
+.opt-card{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--dr-border);cursor:pointer;background:var(--dr-white);transition:background .15s;}
+.opt-card:hover{background:#fafafa;}
+.opt-card.disabled{opacity:.4;pointer-events:none;}
+.opt-left{display:flex;align-items:center;gap:12px;}
+.opt-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.opt-icon.red{background:#fde8df;color:var(--dr-red);}
+.opt-icon.gray{background:#f0f0f0;color:#999;}
+.opt-icon.green{background:#e6f9ef;color:#22c55e;}
+.opt-icon.blue{background:#e8f0fe;color:#4285f4;}
+.opt-icon.pix{background:#e6f9f5;color:#32bcad;}
+.opt-text h4{font-size:.9rem;font-weight:700;color:var(--dr-text);margin-bottom:2px;}
+.opt-text p{font-size:.78rem;color:var(--dr-muted);}
+.opt-chevron{color:var(--dr-muted);font-size:.8rem;}
+
+/* Forms */
+.form-sec{padding:16px;}
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:.78rem;font-weight:600;color:var(--dr-muted);margin-bottom:5px;}
+.fg label .req{color:var(--dr-red);}
+.fg input,.fg select{width:100%;padding:11px 12px;border:1.5px solid var(--dr-border);border-radius:8px;font-size:.9rem;color:var(--dr-text);background:var(--dr-white);outline:none;transition:border .2s;font-family:'Inter',sans-serif;}
+.fg input:focus,.fg select:focus{border-color:var(--dr-red);}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.fg-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.phone-row{display:flex;gap:6px;}
+.phone-flag{display:flex;align-items:center;gap:4px;padding:11px 10px;border:1.5px solid var(--dr-border);border-radius:8px;font-size:.85rem;font-weight:600;flex-shrink:0;color:var(--dr-text);}
+
+/* Revisar */
+.rev-sec{border-bottom:1px solid var(--dr-border);padding:14px 16px;background:var(--dr-white);}
+.rev-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.rev-hdr h3{font-size:.88rem;font-weight:700;color:var(--dr-text);display:flex;align-items:center;gap:8px;}
+.rev-hdr .alt{font-size:.78rem;font-weight:700;color:var(--dr-red);cursor:pointer;border:none;background:none;}
+.rev-info{font-size:.83rem;color:var(--dr-muted);line-height:1.6;}
+.rev-info strong{color:var(--dr-text);}
+.tot-sec{padding:14px 16px;}
+.tot-row{display:flex;justify-content:space-between;font-size:.88rem;margin-bottom:5px;color:var(--dr-muted);}
+.tot-row.final{font-size:1rem;font-weight:800;color:var(--dr-text);margin-top:8px;padding-top:8px;border-top:1px solid var(--dr-border);}
+.cupom-sec{padding:10px 16px;border-top:1px solid var(--dr-border);}
+.cupom-tog{display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:.85rem;font-weight:600;color:var(--dr-text);border:none;background:none;width:100%;}
+
+/* Confirmação */
+.conf-body{padding:18px 16px;}
+.conf-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;}
+.conf-hdr h2{font-size:1rem;font-weight:800;color:var(--dr-text);}
+.conf-badge{font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:50px;background:#fff8e1;color:#f59e0b;border:1px solid #fde68a;}
+.conf-date{font-size:.8rem;color:var(--dr-muted);margin-bottom:14px;}
+.btn-wa-full{width:100%;padding:14px;background:#25D366;color:#fff;border:none;border-radius:var(--dr-radius);font-size:1rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;cursor:pointer;font-family:'Inter',sans-serif;}
+.btn-wa-full:hover{background:#1ebe5d;}
+.conf-items{border:1px solid var(--dr-border);border-radius:var(--dr-radius);overflow:hidden;margin-bottom:12px;}
+.conf-item{display:flex;justify-content:space-between;padding:10px 14px;font-size:.88rem;border-bottom:1px solid var(--dr-border);background:var(--dr-white);}
+.conf-item:last-child{border-bottom:none;}
+.conf-item .nm{font-weight:600;color:var(--dr-text);}
+.conf-item .vl{font-weight:700;color:var(--dr-text);}
+.conf-totals{border:1px solid var(--dr-border);border-radius:var(--dr-radius);overflow:hidden;margin-bottom:12px;}
+.conf-tot-row{display:flex;justify-content:space-between;padding:10px 14px;font-size:.88rem;border-bottom:1px solid var(--dr-border);color:var(--dr-muted);background:var(--dr-white);}
+.conf-tot-row:last-child{border-bottom:none;font-weight:800;color:var(--dr-text);font-size:.95rem;}
+.conf-info{border:1px solid var(--dr-border);border-radius:var(--dr-radius);padding:12px 14px;font-size:.85rem;margin-bottom:10px;background:var(--dr-white);}
+.conf-info h4{font-size:.75rem;font-weight:700;color:var(--dr-muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em;}
+.conf-info p{color:var(--dr-muted);line-height:1.6;}
+.conf-info strong{color:var(--dr-red);}
+.btn-voltar-loja{width:100%;padding:12px;background:#f0f0f0;color:var(--dr-text);border:none;border-radius:var(--dr-radius);font-size:.9rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;}
+
+/* Modal troco */
+.troco-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:600;align-items:flex-end;justify-content:center;}
+.troco-bg.open{display:flex;}
+.troco-box{background:#fff;border-radius:16px 16px 0 0;padding:24px 20px 32px;width:100%;max-width:520px;}
+.troco-box h3{font-size:1rem;font-weight:800;color:#1a1a1a;margin-bottom:6px;}
+.troco-box p{font-size:.85rem;color:#888;margin-bottom:12px;}
+.troco-box input{width:100%;padding:12px;border:1.5px solid #e5e5e5;border-radius:8px;font-size:1rem;outline:none;margin-bottom:12px;font-family:'Inter',sans-serif;}
+.troco-box input:focus{border-color:var(--primary);}
+.btn-troco-ok{width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;margin-bottom:8px;font-family:'Inter',sans-serif;}
+.btn-troco-cancel{width:100%;padding:12px;background:#f0f0f0;color:#1a1a1a;border:none;border-radius:10px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}
+
+/* Carrinho vazio */
+.cart-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;color:var(--dr-muted);text-align:center;}
+.cart-empty i{font-size:2.5rem;margin-bottom:12px;opacity:.3;}
+.cart-empty p{margin-bottom:16px;font-size:.9rem;}
+.cart-empty button{background:none;border:none;color:var(--dr-red);font-size:.9rem;font-weight:700;cursor:pointer;}
+
+@media(min-width:600px){
+  .troco-bg{align-items:center;}
+  .troco-box{border-radius:16px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ======= TOPBAR ======= -->
+<header class="topbar">
+  <div class="topbar-logo">&#127869; <span>POINT</span>&nbsp;DA ALDEIA</div>
+  <div class="topbar-search">
+    <i class="fas fa-search"></i>
+    <input type="text" id="searchInput" placeholder="Buscar produto...">
+  </div>
+  <div class="topbar-right">
+    <a href="loja.html" class="btn-dados">
+      <i class="fas fa-store"></i> <span>Dados da loja</span>
+    </a>
+    <button class="btn-cart-top" onclick="drawerAbrir('dr-carrinho')" id="btnCartTop">
+      <i class="fas fa-shopping-cart"></i> Carrinho
+      <span class="ct-badge hidden" id="ctBadge">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="ticker-item">&#10022; Bem-vindo ao <strong>POINT DA ALDEIA</strong> &mdash; Por&ccedil;&otilde;es e Refei&ccedil;&otilde;es &#10022;</span>
+    <span class="ticker-sep">&#10022;</span>
+    <span class="ticker-item">&#10022; Frango, peixe, carne seca, caldo, costela e muito mais &mdash; <strong>POINT DA ALDEIA</strong> &#10022;</span>
+    <span class="ticker-sep">&#10022;</span>
+    <span class="ticker-item">&#10022; Aberto todos os dias das <strong>11h &agrave;s 20h</strong> &#10022;</span>
+    <span class="ticker-sep">&#10022;</span>
+    <span class="ticker-item">&#10022; Bem-vindo ao <strong>POINT DA ALDEIA</strong> &mdash; Por&ccedil;&otilde;es e Refei&ccedil;&otilde;es &#10022;</span>
+    <span class="ticker-sep">&#10022;</span>
+    <span class="ticker-item">&#10022; Frango, peixe, carne seca, caldo, costela e muito mais &mdash; <strong>POINT DA ALDEIA</strong> &#10022;</span>
+    <span class="ticker-sep">&#10022;</span>
+    <span class="ticker-item">&#10022; Aberto todos os dias das <strong>11h &agrave;s 20h</strong> &#10022;</span>
+    <span class="ticker-sep">&#10022;</span>
+  </div>
+</div>
+
+<!-- STORE HEADER -->
+<div class="store-header">
+  <div class="store-header-top">
+    <div class="store-avatar">&#127869;</div>
+    <div class="store-info">
+      <h1>POINT DA ALDEIA</h1>
+      <div class="store-meta">
+        <a href="https://maps.app.goo.gl/3Fhbeh4ubEvN22kW8" target="_blank"><i class="fas fa-map-marker-alt"></i> Ver no mapa</a>
+        <span>&bull;</span>
+        <a href="https://wa.me/5513997886293" target="_blank"><i class="fab fa-whatsapp"></i> (13) 99788-6293</a>
+        <span>&bull;</span>
+        <span id="statusBadge" class="status-pill"></span>
+      </div>
+    </div>
+    <div style="margin-left:auto;">
+      <button class="btn-share" onclick="compartilhar()"><i class="fas fa-share-alt"></i> Compartilhar</button>
+    </div>
+  </div>
+</div>
+
+<!-- CAT BAR -->
+<div class="cat-bar-wrap">
+  <div class="cat-bar" id="catBar">
+    <button class="cat-btn active" data-cat="porcoes"><i class="fas fa-drumstick-bite"></i> Por&ccedil;&otilde;es</button>
+    <button class="cat-btn" data-cat="bebidas"><i class="fas fa-beer-mug-empty"></i> Bebidas</button>
+    <button class="cat-btn" data-cat="caipirinhas"><i class="fas fa-wine-glass"></i> Caipirinhas</button>
+    <button class="cat-btn" data-cat="batidas"><i class="fas fa-blender"></i> Batidas</button>
+    <button class="cat-btn" data-cat="doses"><i class="fas fa-glass-whiskey"></i> Doses</button>
+  </div>
+</div>
+
+<!-- PRODUTOS -->
+<main class="products-area" id="productsArea">
+
+  <!-- ===== PORÇÕES ===== -->
+  <section class="cat-section" id="sec-porcoes">
+    <h2 class="cat-section-title"><i class="fas fa-drumstick-bite" style="color:var(--primary)"></i> Por&ccedil;&otilde;es</h2>
+    <div class="products-grid">
+
+      <!-- Batata G -->
+      <div class="product-card" data-name="batata frita grande porcao" onclick="abrirProdutoDrawer('Batata G',80,'🍟','Porção','Porção grande de batata frita crocante.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-fire"></i></div>
+        <div class="card-body"><div class="card-cat">Por&ccedil;&atilde;o</div><h3>Batata G</h3><p class="card-desc">Por&ccedil;&atilde;o grande de batata frita crocante.</p><div class="card-price">R$ 80,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Batata G',80,'🍟','Porção','Porção grande de batata frita crocante.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <!-- Batata Meia -->
+      <div class="product-card" data-name="batata frita meia porcao" onclick="abrirProdutoDrawer('Batata Meia',60,'🍟','Porção','Meia porção de batata frita crocante.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-fire"></i></div>
+        <div class="card-body"><div class="card-cat">Por&ccedil;&atilde;o</div><h3>Batata Meia</h3><p class="card-desc">Meia por&ccedil;&atilde;o de batata frita crocante.</p><div class="card-price">R$ 60,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Batata Meia',60,'🍟','Porção','Meia porção de batata frita crocante.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <!-- Batata Pequena -->
+      <div class="product-card" data-name="batata frita pequena porcao" onclick="abrirProdutoDrawer('Batata Pequena',40,'🍟','Porção','Porção pequena de batata frita crocante.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-fire"></i></div>
+        <div class="card-body"><div class="card-cat">Por&ccedil;&atilde;o</div><h3>Batata Pequena</h3><p class="card-desc">Por&ccedil;&atilde;o pequena de batata frita crocante.</p><div class="card-price">R$ 40,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Batata Pequena',40,'🍟','Porção','Porção pequena de batata frita crocante.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <!-- Calabresa G -->
+      <div class="product-card" data-name="calabresa linguica grande porcao" onclick="abrirProdutoDrawer('Calabresa G',80,'🌶️','Porção','Porção grande de calabresa grelhada.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-pepper-hot"></i></div>
+        <div class="card-body"><div class="card-cat">Por&ccedil;&atilde;o</div><h3>Calabresa G</h3><p class="card-desc">Por&ccedil;&atilde;o grande de calabresa grelhada.</p><div class="card-price">R$ 80,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Calabresa G',80,'🌶️','Porção','Porção grande de calabresa grelhada.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <!-- Calabresa Meia -->
+      <div class="product-card" data-name="calabresa linguica meia porcao" onclick="abrirProdutoDrawer('Calabresa Meia',60,'🌶️','Porção','Meia porção de calabresa grelhada.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-pepper-hot"></i></div>
+        <div class="card-body"><div class="card-cat">Por&ccedil;&atilde;o</div><h3>Calabresa Meia</h3><p class="card-desc">Meia por&ccedil;&atilde;o de calabresa grelhada.</p><div class="card-price">R$ 60,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Calabresa Meia',60,'🌶️','Porção','Meia porção de calabresa grelhada.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <!-- Frango 1K -->
+      <div class="product-card" data-name="frango 1kg porcao" onclick="abrirProdutoDrawer('Frango 1K',85,'🍗','Porção','Porção de 1kg de frango frito ou assado.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-drumstick-bite"></i></div>
+        <div class="card-body"><div class="card-cat">Por&ccedil;&atilde;o</div><h3>Frango 1K</h3><p class="card-desc">Por&ccedil;&atilde;o de 1kg de frango frito ou assado.</p><div class="card-price">R$ 85,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Frango 1K',85,'🍗','Porção','Porção de 1kg de frango frito ou assado.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <!-- Tilápia 1K -->
+      <div class="product-card" data-name="tilapia peixe 1kg porcao" onclick="abrirProdutoDrawer('Tilápia 1K',120,'🐟','Porção','Porção de 1kg de tilápia frita ou grelhada.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-fish"></i></div>
+        <div class="card-body"><div class="card-cat">Por&ccedil;&atilde;o</div><h3>Til&aacute;pia 1K</h3><p class="card-desc">Por&ccedil;&atilde;o de 1kg de til&aacute;pia frita ou grelhada.</p><div class="card-price">R$ 120,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Tilápia 1K',120,'🐟','Porção','Porção de 1kg de tilápia frita ou grelhada.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <!-- Isca 1K -->
+      <div class="product-card" data-name="isca peixe 1kg porcao" onclick="abrirProdutoDrawer('Isca 1K',150,'🐠','Porção','Porção de 1kg de isca de peixe frita.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-fish-fins"></i></div>
+        <div class="card-body"><div class="card-cat">Por&ccedil;&atilde;o</div><h3>Isca 1K</h3><p class="card-desc">Por&ccedil;&atilde;o de 1kg de isca de peixe frita.</p><div class="card-price">R$ 150,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Isca 1K',150,'🐠','Porção','Porção de 1kg de isca de peixe frita.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <!-- Isca Meia -->
+      <div class="product-card" data-name="isca peixe meia porcao" onclick="abrirProdutoDrawer('Isca Meia',100,'🐠','Porção','Meia porção de isca de peixe frita.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-fish-fins"></i></div>
+        <div class="card-body"><div class="card-cat">Por&ccedil;&atilde;o</div><h3>Isca Meia</h3><p class="card-desc">Meia por&ccedil;&atilde;o de isca de peixe frita.</p><div class="card-price">R$ 100,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Isca Meia',100,'🐠','Porção','Meia porção de isca de peixe frita.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <!-- Cação 1K -->
+      <div class="product-card" data-name="cacao tubarao peixe 1kg porcao" onclick="abrirProdutoDrawer('Cação 1K',160,'🦈','Porção','Porção de 1kg de cação frito ou grelhado.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-fish"></i></div>
+        <div class="card-body"><div class="card-cat">Por&ccedil;&atilde;o</div><h3>Ca&ccedil;&atilde;o 1K</h3><p class="card-desc">Por&ccedil;&atilde;o de 1kg de ca&ccedil;&atilde;o frito ou grelhado.</p><div class="card-price">R$ 160,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Cação 1K',160,'🦈','Porção','Porção de 1kg de cação frito ou grelhado.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <!-- Cação Média -->
+      <div class="product-card" data-name="cacao tubarao peixe media porcao" onclick="abrirProdutoDrawer('Cação Média',110,'🦈','Porção','Porção média de cação frito ou grelhado.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-fish"></i></div>
+        <div class="card-body"><div class="card-cat">Por&ccedil;&atilde;o</div><h3>Ca&ccedil;&atilde;o M&eacute;dia</h3><p class="card-desc">Por&ccedil;&atilde;o m&eacute;dia de ca&ccedil;&atilde;o frito ou grelhado.</p><div class="card-price">R$ 110,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Cação Média',110,'🦈','Porção','Porção média de cação frito ou grelhado.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <!-- Camarão 1K -->
+      <div class="product-card" data-name="camarao frutos mar 1kg porcao" onclick="abrirProdutoDrawer('Camarão 1K',150,'🦐','Porção','Porção de 1kg de camarão.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-shrimp"></i></div>
+        <div class="card-body"><div class="card-cat">Por&ccedil;&atilde;o</div><h3>Camar&atilde;o 1K</h3><p class="card-desc">Por&ccedil;&atilde;o de 1kg de camar&atilde;o.</p><div class="card-price">R$ 150,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Camarão 1K',150,'🦐','Porção','Porção de 1kg de camarão.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <!-- Camarão Meia -->
+      <div class="product-card" data-name="camarao frutos mar meia porcao" onclick="abrirProdutoDrawer('Camarão Meia',100,'🦐','Porção','Meia porção de camarão.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-shrimp"></i></div>
+        <div class="card-body"><div class="card-cat">Por&ccedil;&atilde;o</div><h3>Camar&atilde;o Meia</h3><p class="card-desc">Meia por&ccedil;&atilde;o de camar&atilde;o.</p><div class="card-price">R$ 100,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Camarão Meia',100,'🦐','Porção','Meia porção de camarão.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <!-- Porquinho 1K -->
+      <div class="product-card" data-name="porquinho costelinha suino 1kg porcao" onclick="abrirProdutoDrawer('Porquinho 1K',150,'🐷','Porção','Porção de 1kg de porquinho assado ou frito.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-bacon"></i></div>
+        <div class="card-body"><div class="card-cat">Por&ccedil;&atilde;o</div><h3>Porquinho 1K</h3><p class="card-desc">Por&ccedil;&atilde;o de 1kg de porquinho assado ou frito.</p><div class="card-price">R$ 150,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Porquinho 1K',150,'🐷','Porção','Porção de 1kg de porquinho assado ou frito.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <!-- Porquinho Meia -->
+      <div class="product-card" data-name="porquinho costelinha suino meia porcao" onclick="abrirProdutoDrawer('Porquinho Meia',100,'🐷','Porção','Meia porção de porquinho assado ou frito.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-bacon"></i></div>
+        <div class="card-body"><div class="card-cat">Por&ccedil;&atilde;o</div><h3>Porquinho Meia</h3><p class="card-desc">Meia por&ccedil;&atilde;o de porquinho assado ou frito.</p><div class="card-price">R$ 100,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Porquinho Meia',100,'🐷','Porção','Meia porção de porquinho assado ou frito.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+    </div>
+  </section>
+
+  <!-- ===== BEBIDAS ===== -->
+  <section class="cat-section" id="sec-bebidas">
+    <h2 class="cat-section-title"><i class="fas fa-beer-mug-empty" style="color:var(--primary)"></i> Bebidas</h2>
+    <div class="products-grid">
+
+      <div class="product-card" data-name="agua mineral pequena" onclick="abrirProdutoDrawer('Água P',4,'💧','Bebida','Água mineral pequena gelada.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-droplet"></i></div>
+        <div class="card-body"><div class="card-cat">Bebida</div><h3>&Aacute;gua P</h3><p class="card-desc">&Aacute;gua mineral pequena gelada.</p><div class="card-price">R$ 4,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Água P',4,'💧','Bebida','Água mineral pequena gelada.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="agua mineral grande" onclick="abrirProdutoDrawer('Água G',7,'💧','Bebida','Água mineral grande gelada.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-droplet"></i></div>
+        <div class="card-body"><div class="card-cat">Bebida</div><h3>&Aacute;gua G</h3><p class="card-desc">&Aacute;gua mineral grande gelada.</p><div class="card-price">R$ 7,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Água G',7,'💧','Bebida','Água mineral grande gelada.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="skol cerveja lata gelada" onclick="abrirProdutoDrawer('Skol',5,'🍺','Cerveja','Skol lata 350ml bem gelada.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-beer-mug-empty"></i></div>
+        <div class="card-body"><div class="card-cat">Cerveja</div><h3>Skol</h3><p class="card-desc">Skol lata 350ml bem gelada.</p><div class="card-price">R$ 5,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Skol',5,'🍺','Cerveja','Skol lata 350ml bem gelada.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="itaipava cerveja lata gelada" onclick="abrirProdutoDrawer('Itaipava',4,'🍺','Cerveja','Itaipava lata 350ml bem gelada.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-beer-mug-empty"></i></div>
+        <div class="card-body"><div class="card-cat">Cerveja</div><h3>Itaipava</h3><p class="card-desc">Itaipava lata 350ml bem gelada.</p><div class="card-price">R$ 4,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Itaipava',4,'🍺','Cerveja','Itaipava lata 350ml bem gelada.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="amstel cerveja lata gelada" onclick="abrirProdutoDrawer('Amstel',6,'🍺','Cerveja','Amstel lata 350ml bem gelada.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-beer-mug-empty"></i></div>
+        <div class="card-body"><div class="card-cat">Cerveja</div><h3>Amstel</h3><p class="card-desc">Amstel lata 350ml bem gelada.</p><div class="card-price">R$ 6,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Amstel',6,'🍺','Cerveja','Amstel lata 350ml bem gelada.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="imperio cerveja lata gelada" onclick="abrirProdutoDrawer('Império',5,'🍺','Cerveja','Império lata 350ml bem gelada.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-beer-mug-empty"></i></div>
+        <div class="card-body"><div class="card-cat">Cerveja</div><h3>Imp&eacute;rio</h3><p class="card-desc">Imp&eacute;rio lata 350ml bem gelada.</p><div class="card-price">R$ 5,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Império',5,'🍺','Cerveja','Império lata 350ml bem gelada.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="budweiser cerveja lata gelada" onclick="abrirProdutoDrawer('Budweiser',6,'🍺','Cerveja','Budweiser lata 350ml bem gelada.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-beer-mug-empty"></i></div>
+        <div class="card-body"><div class="card-cat">Cerveja</div><h3>Budweiser</h3><p class="card-desc">Budweiser lata 350ml bem gelada.</p><div class="card-price">R$ 6,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Budweiser',6,'🍺','Cerveja','Budweiser lata 350ml bem gelada.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="heineken cerveja lata gelada" onclick="abrirProdutoDrawer('Heineken',7,'🍺','Cerveja','Heineken lata 350ml bem gelada.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-beer-mug-empty"></i></div>
+        <div class="card-body"><div class="card-cat">Cerveja</div><h3>Heineken</h3><p class="card-desc">Heineken lata 350ml bem gelada.</p><div class="card-price">R$ 7,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Heineken',7,'🍺','Cerveja','Heineken lata 350ml bem gelada.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="original cerveja lata gelada" onclick="abrirProdutoDrawer('Original',6,'🍺','Cerveja','Original lata 350ml bem gelada.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-beer-mug-empty"></i></div>
+        <div class="card-body"><div class="card-cat">Cerveja</div><h3>Original</h3><p class="card-desc">Original lata 350ml bem gelada.</p><div class="card-price">R$ 6,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Original',6,'🍺','Cerveja','Original lata 350ml bem gelada.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="cerveja sem alcool gelada" onclick="abrirProdutoDrawer('Sem Álcool',7,'🍺','Cerveja','Cerveja sem álcool bem gelada.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-beer-mug-empty"></i></div>
+        <div class="card-body"><div class="card-cat">Cerveja</div><h3>Sem &Aacute;lcool</h3><p class="card-desc">Cerveja sem &aacute;lcool bem gelada.</p><div class="card-price">R$ 7,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Sem Álcool',7,'🍺','Cerveja','Cerveja sem álcool bem gelada.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="smirnoff vodka ice gelado" onclick="abrirProdutoDrawer('Smirnoff Ice',15,'🍹','Bebida','Smirnoff Ice gelado.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-wine-bottle"></i></div>
+        <div class="card-body"><div class="card-cat">Bebida</div><h3>Smirnoff Ice</h3><p class="card-desc">Smirnoff Ice gelado.</p><div class="card-price">R$ 15,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Smirnoff Ice',15,'🍹','Bebida','Smirnoff Ice gelado.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="51 ice gelado cachaca" onclick="abrirProdutoDrawer('51 Ice',12,'🍹','Bebida','51 Ice gelado.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-wine-bottle"></i></div>
+        <div class="card-body"><div class="card-cat">Bebida</div><h3>51 Ice</h3><p class="card-desc">51 Ice gelado.</p><div class="card-price">R$ 12,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('51 Ice',12,'🍹','Bebida','51 Ice gelado.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="guaraviton energetico isotonico" onclick="abrirProdutoDrawer('Guaraviton',6,'⚡','Bebida','Guaraviton energético gelado.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-bolt"></i></div>
+        <div class="card-body"><div class="card-cat">Bebida</div><h3>Guaraviton</h3><p class="card-desc">Guaraviton energ&eacute;tico gelado.</p><div class="card-price">R$ 6,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Guaraviton',6,'⚡','Bebida','Guaraviton energético gelado.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="gatorade isotonico esportivo" onclick="abrirProdutoDrawer('Gatorade',10,'🥤','Bebida','Gatorade isotônico gelado.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-bottle-water"></i></div>
+        <div class="card-body"><div class="card-cat">Bebida</div><h3>Gatorade</h3><p class="card-desc">Gatorade isot&ocirc;nico gelado.</p><div class="card-price">R$ 10,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Gatorade',10,'🥤','Bebida','Gatorade isotônico gelado.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="refrigerante lata coca pepsi guarana" onclick="abrirProdutoDrawer('Refrigerante Lata',6,'🥤','Bebida','Refrigerante lata a partir de R$ 6,00. Diversas marcas.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-bottle-water"></i></div>
+        <div class="card-body"><div class="card-cat">Bebida</div><h3>Refrigerante Lata</h3><p class="card-desc">Diversas marcas. A partir de R$ 6,00.</p><div class="card-price">R$ 6,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Refrigerante Lata',6,'🥤','Bebida','Refrigerante lata. Diversas marcas.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="refrigerante 2 litros garrafa" onclick="abrirProdutoDrawer('Refrigerante 2L',12,'🥤','Bebida','Refrigerante garrafa 2 litros.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-bottle-water"></i></div>
+        <div class="card-body"><div class="card-cat">Bebida</div><h3>Refrigerante 2L</h3><p class="card-desc">Refrigerante garrafa 2 litros.</p><div class="card-price">R$ 12,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Refrigerante 2L',12,'🥤','Bebida','Refrigerante garrafa 2 litros.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="refrigerante 1 litro garrafa" onclick="abrirProdutoDrawer('Refrigerante 1L',8,'🥤','Bebida','Refrigerante garrafa 1 litro.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-bottle-water"></i></div>
+        <div class="card-body"><div class="card-cat">Bebida</div><h3>Refrigerante 1L</h3><p class="card-desc">Refrigerante garrafa 1 litro.</p><div class="card-price">R$ 8,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Refrigerante 1L',8,'🥤','Bebida','Refrigerante garrafa 1 litro.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="refrigerante 1.5 litros garrafa" onclick="abrirProdutoDrawer('Refrigerante 1,5L',10,'🥤','Bebida','Refrigerante garrafa 1,5 litros.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-bottle-water"></i></div>
+        <div class="card-body"><div class="card-cat">Bebida</div><h3>Refrigerante 1,5L</h3><p class="card-desc">Refrigerante garrafa 1,5 litros.</p><div class="card-price">R$ 10,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Refrigerante 1,5L',10,'🥤','Bebida','Refrigerante garrafa 1,5 litros.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+    </div>
+  </section>
+
+  <!-- ===== CAIPIRINHAS ===== -->
+  <section class="cat-section" id="sec-caipirinhas">
+    <h2 class="cat-section-title"><i class="fas fa-wine-glass" style="color:var(--primary)"></i> Caipirinhas</h2>
+    <div class="products-grid">
+
+      <div class="product-card" data-name="caipirinha pinga cachaca limao" onclick="abrirProdutoDrawer('Caipirinha de Pinga',25,'🍹','Caipirinha','Caipirinha feita com pinga, limão e açúcar.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-wine-glass"></i></div>
+        <div class="card-body"><div class="card-cat">Caipirinha</div><h3>Caipirinha de Pinga</h3><p class="card-desc">Caipirinha feita com pinga, lim&atilde;o e a&ccedil;&uacute;car.</p><div class="card-price">R$ 25,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Caipirinha de Pinga',25,'🍹','Caipirinha','Caipirinha feita com pinga, limão e açúcar.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="caipirinha vodka limao" onclick="abrirProdutoDrawer('Caipirinha de Vodka',30,'🍹','Caipirinha','Caipirinha feita com vodka, limão e açúcar.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-wine-glass"></i></div>
+        <div class="card-body"><div class="card-cat">Caipirinha</div><h3>Caipirinha de Vodka</h3><p class="card-desc">Caipirinha feita com vodka, lim&atilde;o e a&ccedil;&uacute;car.</p><div class="card-price">R$ 30,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Caipirinha de Vodka',30,'🍹','Caipirinha','Caipirinha feita com vodka, limão e açúcar.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="caipirinha smirnoff vodka premium" onclick="abrirProdutoDrawer('Caipirinha Smirnoff',40,'🍹','Caipirinha','Caipirinha feita com Smirnoff, limão e açúcar.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-wine-glass"></i></div>
+        <div class="card-body"><div class="card-cat">Caipirinha</div><h3>Caipirinha Smirnoff</h3><p class="card-desc">Caipirinha feita com Smirnoff, lim&atilde;o e a&ccedil;&uacute;car.</p><div class="card-price">R$ 40,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Caipirinha Smirnoff',40,'🍹','Caipirinha','Caipirinha feita com Smirnoff, limão e açúcar.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="caipirinha saque japones" onclick="abrirProdutoDrawer('Caipirinha de Saquê',40,'🍶','Caipirinha','Caipirinha feita com saquê, limão e açúcar.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-wine-glass"></i></div>
+        <div class="card-body"><div class="card-cat">Caipirinha</div><h3>Caipirinha de Saq&ucirc;&ecirc;</h3><p class="card-desc">Caipirinha feita com saq&ucirc;&ecirc;, lim&atilde;o e a&ccedil;&uacute;car.</p><div class="card-price">R$ 40,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Caipirinha de Saquê',40,'🍶','Caipirinha','Caipirinha feita com saquê, limão e açúcar.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+    </div>
+  </section>
+
+  <!-- ===== BATIDAS ===== -->
+  <section class="cat-section" id="sec-batidas">
+    <h2 class="cat-section-title"><i class="fas fa-blender" style="color:var(--primary)"></i> Batidas</h2>
+    <div class="products-grid">
+
+      <div class="product-card" data-name="batida pinga cachaca fruta" onclick="abrirProdutoDrawer('Batida de Pinga',30,'🥛','Batida','Batida cremosa feita com pinga e frutas.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-blender"></i></div>
+        <div class="card-body"><div class="card-cat">Batida</div><h3>Batida de Pinga</h3><p class="card-desc">Batida cremosa feita com pinga e frutas.</p><div class="card-price">R$ 30,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Batida de Pinga',30,'🥛','Batida','Batida cremosa feita com pinga e frutas.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="batida vodka fruta" onclick="abrirProdutoDrawer('Batida de Vodka',35,'🥛','Batida','Batida cremosa feita com vodka e frutas.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-blender"></i></div>
+        <div class="card-body"><div class="card-cat">Batida</div><h3>Batida de Vodka</h3><p class="card-desc">Batida cremosa feita com vodka e frutas.</p><div class="card-price">R$ 35,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Batida de Vodka',35,'🥛','Batida','Batida cremosa feita com vodka e frutas.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="batida smirnoff premium fruta" onclick="abrirProdutoDrawer('Batida Smirnoff',45,'🥛','Batida','Batida cremosa feita com Smirnoff e frutas.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-blender"></i></div>
+        <div class="card-body"><div class="card-cat">Batida</div><h3>Batida Smirnoff</h3><p class="card-desc">Batida cremosa feita com Smirnoff e frutas.</p><div class="card-price">R$ 45,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Batida Smirnoff',45,'🥛','Batida','Batida cremosa feita com Smirnoff e frutas.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="batida saque japones fruta" onclick="abrirProdutoDrawer('Batida de Saquê',45,'🥛','Batida','Batida cremosa feita com saquê e frutas.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-blender"></i></div>
+        <div class="card-body"><div class="card-cat">Batida</div><h3>Batida de Saq&ucirc;&ecirc;</h3><p class="card-desc">Batida cremosa feita com saq&ucirc;&ecirc; e frutas.</p><div class="card-price">R$ 45,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Batida de Saquê',45,'🥛','Batida','Batida cremosa feita com saquê e frutas.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+    </div>
+  </section>
+
+  <!-- ===== DOSES ===== -->
+  <section class="cat-section" id="sec-doses">
+    <h2 class="cat-section-title"><i class="fas fa-glass-whiskey" style="color:var(--primary)"></i> Doses</h2>
+    <div class="products-grid">
+
+      <div class="product-card" data-name="dose cavalo cachaca pinga whisky" onclick="abrirProdutoDrawer('Dose Cavalo',35,'🥃','Dose','Dose cavalo de destilado.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-glass-whiskey"></i></div>
+        <div class="card-body"><div class="card-cat">Dose</div><h3>Dose Cavalo</h3><p class="card-desc">Dose cavalo de destilado.</p><div class="card-price">R$ 35,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Dose Cavalo',35,'🥃','Dose','Dose cavalo de destilado.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+      <div class="product-card" data-name="dose red label whisky johnnie walker" onclick="abrirProdutoDrawer('Dose Red Label',40,'🥃','Dose','Dose de Johnnie Walker Red Label.')">
+        <div class="card-img"><div class="bg-gradient"></div><i class="fas fa-glass-whiskey"></i></div>
+        <div class="card-body"><div class="card-cat">Dose</div><h3>Dose Red Label</h3><p class="card-desc">Dose de Johnnie Walker Red Label.</p><div class="card-price">R$ 40,00</div>
+          <div class="card-actions"><button class="btn-pedir" onclick="event.stopPropagation();abrirProdutoDrawer('Dose Red Label',40,'🥃','Dose','Dose de Johnnie Walker Red Label.')"><i class="fas fa-plus"></i> Adicionar</button></div></div></div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>&copy; 2026 POINT DA ALDEIA &mdash; Por&ccedil;&otilde;es &amp; Refei&ccedil;&otilde;es</p>
+</footer>
+
+<!-- ===== SELETOR DE COR FLUTUANTE ===== -->
+<div id="colorPickerBtn" onclick="toggleColorPicker()" style="
+  position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;
+  width:46px;height:46px;border-radius:50%;
+  background:var(--primary);border:3px solid rgba(255,255,255,.25);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.5);
+  transition:transform .2s;
+" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+  <i class="fas fa-palette" style="color:#fff;font-size:1.1rem;"></i>
+</div>
+
+<div id="colorPickerPanel" style="
+  display:none;position:fixed;bottom:5.5rem;right:1.5rem;z-index:998;
+  background:#1a1a1a;border:1px solid rgba(255,255,255,.12);border-radius:14px;
+  padding:1rem;box-shadow:0 8px 32px rgba(0,0,0,.6);width:220px;
+">
+  <div style="font-size:.8rem;font-weight:700;color:#aaa;margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.06em;">
+    <i class="fas fa-palette" style="color:var(--primary)"></i> Cor do site
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.75rem" id="siteCoresPaleta">
+    <!-- gerado pelo JS -->
+  </div>
+  <div style="display:flex;align-items:center;gap:.6rem">
+    <input type="color" id="siteCorCustom" style="width:36px;height:30px;border:none;border-radius:6px;cursor:pointer;background:none;padding:0" oninput="trocarCorSite(this.value)">
+    <span style="font-size:.78rem;color:#aaa">Cor personalizada</span>
+  </div>
+</div>
+
+<script>
+var _cpAberto = false;
+var _cores = [
+  '#e8560a','#e53935','#d81b60','#8e24aa',
+  '#1e88e5','#00897b','#43a047','#f4c300',
+  '#ff7043','#6d4c41','#546e7a','#000000'
+];
+
+function toggleColorPicker() {
+  _cpAberto = !_cpAberto;
+  var panel = document.getElementById('colorPickerPanel');
+  panel.style.display = _cpAberto ? 'block' : 'none';
+  if (_cpAberto) renderCoresPaleta();
+}
+
+function renderCoresPaleta() {
+  var corAtual = localStorage.getItem('pda_cor_tema') || '#e8560a';
+  var paleta = document.getElementById('siteCoresPaleta');
+  if (!paleta) return;
+  paleta.innerHTML = _cores.map(function(c) {
+    var sel = c === corAtual;
+    return '<button onclick="trocarCorSite(\''+c+'\')" style="'+
+      'width:34px;height:34px;border-radius:50%;background:'+c+';cursor:pointer;'+
+      'border:'+(sel?'3px solid #fff':'3px solid transparent')+';'+
+      'outline:'+(sel?'3px solid '+c:'none')+';'+
+      'box-shadow:0 2px 6px rgba(0,0,0,.4);transition:transform .15s" '+
+      'onmouseover="this.style.transform=\'scale(1.15)\'" '+
+      'onmouseout="this.style.transform=\'scale(1)\'"></button>';
+  }).join('');
+  document.getElementById('siteCorCustom').value = corAtual;
+}
+
+function trocarCorSite(cor) {
+  localStorage.setItem('pda_cor_tema', cor);
+  document.documentElement.style.setProperty('--primary', cor);
+  var hex = cor.replace('#','');
+  var r = parseInt(hex.substring(0,2),16);
+  var g = parseInt(hex.substring(2,4),16);
+  var b = parseInt(hex.substring(4,6),16);
+  document.documentElement.style.setProperty('--primary-d',
+    'rgb('+Math.max(0,r-30)+','+Math.max(0,g-30)+','+Math.max(0,b-30)+')');
+
+  // Atualiza o drawer que usa CSS custom property própria
+  var drawer = document.getElementById('cart-drawer');
+  if (drawer) {
+    drawer.style.setProperty('--dr-red', cor);
+    drawer.style.setProperty('--dr-red-d', 'rgb('+Math.max(0,r-30)+','+Math.max(0,g-30)+','+Math.max(0,b-30)+')');
+  }
+
+  // Atualiza botão flutuante
+  document.getElementById('colorPickerBtn').style.background = cor;
+
+  // Notifica outras abas (admin)
+  try { var bc = new BroadcastChannel('pda_tema'); bc.postMessage({cor:cor}); bc.close(); } catch(e){}
+
+  renderCoresPaleta();
+}
+
+// Fecha ao clicar fora
+document.addEventListener('click', function(e) {
+  if (_cpAberto &&
+      !document.getElementById('colorPickerPanel').contains(e.target) &&
+      !document.getElementById('colorPickerBtn').contains(e.target)) {
+    _cpAberto = false;
+    document.getElementById('colorPickerPanel').style.display = 'none';
+  }
+});
+</script>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- ============================================================
+     DRAWER DO CARRINHO
+     ============================================================ -->
+<div id="drawer-bg" onclick="drawerFechar()"></div>
+
+<div id="cart-drawer">
+
+  <!-- P1: Produto detalhe -->
+  <div class="dr-page" id="dr-produto">
+    <div class="dr-topbar">
+      <button class="dr-back" onclick="drawerAbrir('dr-carrinho')"><i class="fas fa-arrow-left"></i></button>
+      <span class="dr-title"></span>
+      <span></span>
+    </div>
+    <div class="dr-body">
+      <div class="prod-img-dr" id="drProdImg"></div>
+      <div class="prod-body-dr">
+        <h2 id="drProdNome"></h2>
+        <div class="prod-price-dr">R$ <span id="drProdPreco"></span>/UN</div>
+        <div class="obs-label">Observa&ccedil;&otilde;es</div>
+        <textarea class="obs-input" id="drProdObs" placeholder="Digite alguma observa&ccedil;&atilde;o (opcional)"></textarea>
+      </div>
+    </div>
+    <div class="add-bar">
+      <div class="qty-ctrl">
+        <button onclick="drAlterarQty(-1)"><i class="fas fa-minus" style="font-size:.65rem"></i></button>
+        <span class="qv" id="drProdQty">1</span>
+        <button onclick="drAlterarQty(1)"><i class="fas fa-plus" style="font-size:.65rem"></i></button>
+      </div>
+      <div class="add-total-info">
+        <span>Total</span>
+        <strong id="drProdTotal">R$ 0,00</strong>
+      </div>
+      <button class="btn-add-dr" onclick="drAdicionarItem()">Adicionar</button>
+    </div>
+  </div>
+
+  <!-- P2: Carrinho -->
+  <div class="dr-page" id="dr-carrinho">
+    <div class="dr-topbar">
+      <button class="dr-back" onclick="drawerFechar()"><i class="fas fa-arrow-left"></i></button>
+      <span class="dr-title">Carrinho</span>
+      <button class="dr-action" onclick="drLimpar()">Limpar</button>
+    </div>
+    <div class="dr-body" id="drCarrinhoLista"></div>
+    <div class="dr-bottom">
+      <div class="dr-sub-row"><span>Subtotal</span><strong id="drCartSub">R$ 0,00</strong></div>
+      <button class="dr-btn" onclick="drawerAbrir('dr-entrega')">Continuar</button>
+    </div>
+  </div>
+
+  <!-- P3: Tipo de entrega -->
+  <div class="dr-page" id="dr-entrega">
+    <div class="dr-topbar">
+      <button class="dr-back" onclick="drawerAbrir('dr-carrinho')"><i class="fas fa-arrow-left"></i></button>
+      <span class="dr-title">Op&ccedil;&otilde;es de entrega</span>
+      <span></span>
+    </div>
+    <div class="dr-body">
+      <div class="opt-card disabled" style="opacity:.4;pointer-events:none;">
+        <div class="opt-left"><div class="opt-icon gray"><i class="fas fa-motorcycle"></i></div><div class="opt-text"><h4>Entrega</h4><p>Indispon&iacute;vel no momento</p></div></div>
+        <i class="fas fa-ban opt-chevron" style="color:#ff4466"></i>
+      </div>
+      <div class="opt-card" onclick="drSelecionarEntrega('retirada')">
+        <div class="opt-left"><div class="opt-icon red"><i class="fas fa-store"></i></div><div class="opt-text"><h4>Retirada</h4><p>Retire no estabelecimento</p></div></div>
+        <i class="fas fa-chevron-right opt-chevron"></i>
+      </div>
+      <div class="opt-card" onclick="drSelecionarEntrega('local')">
+        <div class="opt-left"><div class="opt-icon red"><i class="fas fa-utensils"></i></div><div class="opt-text"><h4>Consumo no local</h4><p>Consumir no estabelecimento</p></div></div>
+        <i class="fas fa-chevron-right opt-chevron"></i>
+      </div>
+    </div>
+    <div class="dr-bottom">
+      <div class="dr-sub-row"><span>Subtotal</span><strong id="drEntSub">R$ 0,00</strong></div>
+    </div>
+  </div>
+
+  <!-- P4: Endereço -->
+  <div class="dr-page" id="dr-endereco">
+    <div class="dr-topbar">
+      <button class="dr-back" onclick="drawerAbrir('dr-entrega')"><i class="fas fa-arrow-left"></i></button>
+      <span class="dr-title">Endere&ccedil;o de entrega</span>
+      <span></span>
+    </div>
+    <div class="dr-body">
+      <div class="form-sec">
+        <div class="fg-row">
+          <div class="fg"><label>CEP</label><input type="text" id="drCep" placeholder="00000-000" maxlength="9" oninput="drMaskCEP(this)" onblur="drBuscarCEP()"></div>
+          <div></div>
+        </div>
+        <div class="fg"><label>Endere&ccedil;o <span class="req">*</span></label><input type="text" id="drLog" placeholder="Rua, avenida..."></div>
+        <div class="fg-row3">
+          <div class="fg"><label>N&uacute;mero <span class="req">*</span></label><input type="text" id="drNum" placeholder="N&ordm;"></div>
+          <div class="fg" style="grid-column:span 2"><label>Complemento</label><input type="text" id="drComp" placeholder="Ap, bloco..."></div>
+        </div>
+        <div class="fg"><label>Bairro <span class="req">*</span></label><input type="text" id="drBairro" placeholder="Bairro"></div>
+        <div class="fg-row">
+          <div class="fg"><label>UF <span class="req">*</span></label><input type="text" id="drUF" placeholder="SP" maxlength="2"></div>
+          <div class="fg"><label>Cidade <span class="req">*</span></label><input type="text" id="drCidade" placeholder="Cidade"></div>
+        </div>
+        <div class="fg"><label>Refer&ecirc;ncia</label><input type="text" id="drRef" placeholder="Ponto de refer&ecirc;ncia"></div>
+      </div>
+    </div>
+    <div class="dr-bottom">
+      <button class="dr-btn" onclick="drConfirmarEndereco()">Continuar para pagamento</button>
+    </div>
+  </div>
+
+  <!-- P5: Tipo de pagamento -->
+  <div class="dr-page" id="dr-pgto-tipo">
+    <div class="dr-topbar">
+      <button class="dr-back" id="drPgtoBack" onclick="drawerAbrir('dr-entrega')"><i class="fas fa-arrow-left"></i></button>
+      <span class="dr-title">Op&ccedil;&otilde;es de pagamento</span>
+      <span></span>
+    </div>
+    <div class="dr-body">
+      <div class="opt-card" onclick="drawerAbrir('dr-pgto-metodo')">
+        <div class="opt-left"><div class="opt-icon green"><i class="fas fa-dollar-sign"></i></div><div class="opt-text"><h4>Pagar na hora</h4><p>Pague no momento da retirada</p></div></div>
+        <i class="fas fa-chevron-right opt-chevron"></i>
+      </div>
+      <div class="opt-card disabled">
+        <div class="opt-left"><div class="opt-icon gray"><i class="fas fa-mobile-alt"></i></div><div class="opt-text"><h4>Pagar agora</h4><p>Pague agora pelo aplicativo</p></div></div>
+        <i class="fas fa-chevron-right opt-chevron"></i>
+      </div>
+    </div>
+    <div class="dr-bottom">
+      <div class="dr-sub-row"><span>Taxa de entrega</span><strong id="drPgtoTaxa" style="color:#666">+ R$ 0,00</strong></div>
+      <div class="dr-sub-row" style="margin-bottom:0"><span>Subtotal</span><strong id="drPgtoSub">R$ 0,00</strong></div>
+    </div>
+  </div>
+
+  <!-- P6: Método de pagamento -->
+  <div class="dr-page" id="dr-pgto-metodo">
+    <div class="dr-topbar">
+      <button class="dr-back" onclick="drawerAbrir('dr-pgto-tipo')"><i class="fas fa-arrow-left"></i></button>
+      <span class="dr-title">M&eacute;todo de pagamento</span>
+      <span></span>
+    </div>
+    <div class="dr-body">
+      <div class="opt-card" onclick="drSelecionarPgto('cartao')">
+        <div class="opt-left"><div class="opt-icon blue"><i class="fas fa-credit-card"></i></div><div class="opt-text"><h4>Cart&atilde;o de cr&eacute;dito</h4><p>D&eacute;bito ou cr&eacute;dito</p></div></div>
+        <i class="fas fa-chevron-right opt-chevron"></i>
+      </div>
+      <div class="opt-card" onclick="drSelecionarPgto('pix')">
+        <div class="opt-left"><div class="opt-icon pix"><i class="fas fa-qrcode"></i></div><div class="opt-text"><h4>PIX</h4><p>Pagamento instant&acirc;neo</p></div></div>
+        <i class="fas fa-chevron-right opt-chevron"></i>
+      </div>
+      <div class="opt-card" onclick="drSelecionarPgto('dinheiro')">
+        <div class="opt-left"><div class="opt-icon red"><i class="fas fa-money-bill-wave"></i></div><div class="opt-text"><h4>Dinheiro</h4><p>Pagamento em esp&eacute;cie</p></div></div>
+        <i class="fas fa-chevron-right opt-chevron"></i>
+      </div>
+    </div>
+    <div class="dr-bottom">
+      <div class="dr-sub-row"><span>Taxa de entrega</span><strong id="drMetodoTaxa" style="color:#666">+ R$ 0,00</strong></div>
+      <div class="dr-sub-row" style="margin-bottom:0"><span>Subtotal</span><strong id="drMetodoSub">R$ 0,00</strong></div>
+    </div>
+  </div>
+
+  <!-- P7: Dados do cliente -->
+  <div class="dr-page" id="dr-dados">
+    <div class="dr-topbar">
+      <button class="dr-back" onclick="drawerAbrir('dr-pgto-metodo')"><i class="fas fa-arrow-left"></i></button>
+      <span class="dr-title">Insira seus dados</span>
+      <span></span>
+    </div>
+    <div class="dr-body">
+      <div class="form-sec">
+        <div class="fg"><label>Nome <span class="req">*</span></label><input type="text" id="drNome" placeholder="Seu nome completo"></div>
+        <div class="fg"><label>Telefone <span class="req">*</span></label>
+          <div class="phone-row">
+            <div class="phone-flag">&#127463;&#127479; +55</div>
+            <input type="tel" id="drTel" placeholder="(13) 99000-0000" style="flex:1" oninput="drMaskTel(this)">
+          </div>
+        </div>
+        <div class="fg"><label>E-mail</label><input type="email" id="drEmail" placeholder="Seu e-mail (opcional)"></div>
+        <div class="fg"><label>CPF/CNPJ</label><input type="text" id="drCPF" placeholder="000.000.000-00" oninput="drMaskCPF(this)"></div>
+      </div>
+    </div>
+    <div class="dr-bottom">
+      <button class="dr-btn" onclick="drConfirmarDados()">Confirmar</button>
+    </div>
+  </div>
+
+  <!-- P8: Revisar pedido -->
+  <div class="dr-page" id="dr-revisar">
+    <div class="dr-topbar">
+      <button class="dr-back" onclick="drawerAbrir('dr-dados')"><i class="fas fa-arrow-left"></i></button>
+      <span class="dr-title">Revisar pedido</span>
+      <button class="dr-action" onclick="drawerFechar()"><i class="fas fa-home"></i></button>
+    </div>
+    <div class="dr-body">
+      <div id="drRevCliente" class="rev-sec"></div>
+      <div id="drRevEntrega" class="rev-sec"></div>
+      <div id="drRevPgto"    class="rev-sec"></div>
+      <div class="cupom-sec">
+        <button class="cupom-tog" onclick="drToggleCupom()">
+          <span><i class="fas fa-ticket-alt" style="margin-right:6px;color:var(--primary)"></i>Tem um cupom?</span>
+          <i class="fas fa-chevron-down" id="drCupomChev"></i>
+        </button>
+        <div id="drCupomBox" style="display:none;margin-top:10px;display:none">
+          <div style="display:flex;gap:8px">
+            <input type="text" id="drCupomInput" placeholder="Código do cupom" style="flex:1;padding:9px 12px;border:1.5px solid #e5e5e5;border-radius:8px;font-size:.88rem;outline:none">
+            <button onclick="drAplicarCupom()" style="padding:9px 14px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer">Aplicar</button>
+          </div>
+        </div>
+      </div>
+      <div class="tot-sec" id="drRevTotais"></div>
+    </div>
+    <div class="dr-bottom">
+      <button class="dr-btn" onclick="drFazerPedido()">Fazer pedido</button>
+    </div>
+  </div>
+
+  <!-- P9: Confirmação -->
+  <div class="dr-page" id="dr-confirmacao">
+    <div class="dr-topbar">
+      <button class="dr-back" onclick="drawerFechar()"><i class="fas fa-arrow-left"></i></button>
+      <span class="dr-title">Detalhes do pedido</span>
+      <button class="dr-action" onclick="drawerFechar()"><i class="fas fa-home"></i></button>
+    </div>
+    <div class="dr-body">
+      <div class="conf-body" id="drConfBody"></div>
+    </div>
+  </div>
+
+</div><!-- /cart-drawer -->
+
+<!-- MODAL TROCO -->
+<div class="troco-bg" id="trocoBg">
+  <div class="troco-box">
+    <h3>Troco para quanto?</h3>
+    <p>Informe o valor que voc&ecirc; vai pagar.</p>
+    <p style="font-size:.82rem;color:var(--primary);font-weight:700;margin-bottom:10px" id="trocoTotal"></p>
+    <input type="number" id="trocoInput" placeholder="R$ 0,00" min="0" step="0.01">
+    <button class="btn-troco-ok" onclick="drConfirmarTroco()">Confirmar</button>
+    <button class="btn-troco-cancel" onclick="drFecharTroco()">Cancelar</button>
+  </div>
+</div>
+
+<script src="protecao.js"></script>
+<script src="script.js"></script>
+<script>
+/* ============================================================
+   CARRINHO — lógica toda inline
+   ============================================================ */
+const WA = '5513997886293';
+const TAXA = 4.99;
+
+let cart    = JSON.parse(localStorage.getItem('pda_carrinho') || '[]');
+let pedNum  = parseInt(localStorage.getItem('pda_pedido_num') || '100000');
+let prodAtual = null;
+let drQty   = 1;
+let pedido  = { tipo:'', end:{}, pgto:'', troco:null, cliente:{}, desc:0 };
+let editandoId = null;
+
+/* --- Drawer abrir/fechar --- */
+function drawerAbrir(pageId) {
+  document.getElementById('drawer-bg').classList.add('open');
+  document.getElementById('cart-drawer').classList.add('open');
+  document.querySelectorAll('.dr-page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  document.body.style.overflow = 'hidden';
+  atualizarBars();
+  if (pageId === 'dr-carrinho') renderCarrinho();
+}
+
+function drawerFechar() {
+  document.getElementById('drawer-bg').classList.remove('open');
+  document.getElementById('cart-drawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* --- Produto --- */
+function abrirProdutoDrawer(nome, preco, emoji, cat, desc) {
+  prodAtual = { nome, preco, emoji, cat, desc };
+  editandoId = null;
+  drQty = 1;
+  document.getElementById('drProdNome').textContent  = nome;
+  document.getElementById('drProdPreco').textContent = fmtN(preco);
+  document.getElementById('drProdImg').textContent   = emoji;
+  document.getElementById('drProdObs').value         = '';
+  document.getElementById('drProdQty').textContent   = 1;
+  document.getElementById('drProdTotal').textContent = fmtM(preco);
+  drawerAbrir('dr-produto');
+}
+
+function drAlterarQty(d) {
+  drQty = Math.max(1, drQty + d);
+  document.getElementById('drProdQty').textContent   = drQty;
+  document.getElementById('drProdTotal').textContent = fmtM((prodAtual?.preco || 0) * drQty);
+}
+
+function drAdicionarItem() {
+  if (!prodAtual) return;
+  const obs = document.getElementById('drProdObs').value.trim();
+  if (editandoId) {
+    cart = cart.filter(i => i.id !== editandoId);
+    editandoId = null;
+  }
+  cart.push({ id: Date.now(), nome: prodAtual.nome, preco: prodAtual.preco, emoji: prodAtual.emoji, qty: drQty, obs });
+  salvarCart();
+  drawerAbrir('dr-carrinho');
+  showToast(prodAtual.nome + ' adicionado!');
+}
+
+/* --- Renderizar carrinho --- */
+function renderCarrinho() {
+  const el = document.getElementById('drCarrinhoLista');
+  if (!cart.length) {
+    el.innerHTML = '<div class="cart-empty"><i class="fas fa-shopping-cart"></i><p>Seu carrinho está vazio.</p><button onclick="drawerFechar()">Ver cardápio</button></div>';
+    return;
+  }
+  el.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <div class="ci-info">
+        <h4>${item.nome}</h4>
+        ${item.obs ? '<p class="obs">' + item.obs + '</p>' : ''}
+        <p class="price">${fmtM(item.preco * item.qty)}</p>
+      </div>
+      <div class="ci-right">
+        <button class="ci-alterar" onclick="drEditarItem(${item.id})">Alterar</button>
+        <div class="qty-ctrl">
+          <button onclick="drQtyItem(${item.id},-1)"><i class="fas fa-trash" style="font-size:.6rem;color:var(--primary)"></i></button>
+          <span class="qv">${item.qty}</span>
+          <button onclick="drQtyItem(${item.id},1)"><i class="fas fa-plus" style="font-size:.65rem"></i></button>
+        </div>
+      </div>
+    </div>`).join('') + '<button class="add-more" onclick="drawerFechar()"><i class="fas fa-plus" style="margin-right:4px"></i>Adicionar mais itens</button>';
+}
+
+function drQtyItem(id, d) {
+  const idx = cart.findIndex(i => i.id === id);
+  if (idx === -1) return;
+  cart[idx].qty += d;
+  if (cart[idx].qty <= 0) cart.splice(idx, 1);
+  salvarCart();
+  renderCarrinho();
+  atualizarBars();
+}
+
+function drEditarItem(id) {
+  const item = cart.find(i => i.id === id);
+  if (!item) return;
+  prodAtual  = { nome: item.nome, preco: item.preco, emoji: item.emoji };
+  editandoId = id;
+  drQty      = item.qty;
+  document.getElementById('drProdNome').textContent  = item.nome;
+  document.getElementById('drProdPreco').textContent = fmtN(item.preco);
+  document.getElementById('drProdImg').textContent   = item.emoji;
+  document.getElementById('drProdObs').value         = item.obs || '';
+  document.getElementById('drProdQty').textContent   = drQty;
+  document.getElementById('drProdTotal').textContent = fmtM(item.preco * drQty);
+  drawerAbrir('dr-produto');
+}
+
+function drLimpar() {
+  if (!confirm('Limpar o carrinho?')) return;
+  cart = [];
+  salvarCart();
+  renderCarrinho();
+}
+
+/* --- Entrega --- */
+function drSelecionarEntrega(tipo) {
+  pedido.tipo = tipo;
+  if (tipo === 'entrega') {
+    drawerAbrir('dr-endereco');
+  } else {
+    pedido.end = {};
+    document.getElementById('drPgtoBack').onclick = () => drawerAbrir('dr-entrega');
+    drawerAbrir('dr-pgto-tipo');
+  }
+}
+
+/* --- Endereço --- */
+function drConfirmarEndereco() {
+  const log = document.getElementById('drLog').value.trim();
+  const num = document.getElementById('drNum').value.trim();
+  const bai = document.getElementById('drBairro').value.trim();
+  const cid = document.getElementById('drCidade').value.trim();
+  const uf  = document.getElementById('drUF').value.trim();
+  if (!log || !num || !bai || !cid || !uf) { alert('Preencha os campos obrigatórios.'); return; }
+  pedido.end = {
+    log, num,
+    comp: document.getElementById('drComp').value.trim(),
+    bai, cid,
+    uf: uf.toUpperCase(),
+    ref: document.getElementById('drRef').value.trim(),
+    cep: document.getElementById('drCep').value.trim()
+  };
+  document.getElementById('drPgtoBack').onclick = () => drawerAbrir('dr-endereco');
+  drawerAbrir('dr-pgto-tipo');
+}
+
+async function drBuscarCEP() {
+  const cep = document.getElementById('drCep').value.replace(/\D/g, '');
+  if (cep.length !== 8) return;
+  try {
+    const d = await fetch('https://viacep.com.br/ws/' + cep + '/json/').then(r => r.json());
+    if (!d.erro) {
+      document.getElementById('drLog').value    = d.logradouro || '';
+      document.getElementById('drBairro').value = d.bairro     || '';
+      document.getElementById('drCidade').value = d.localidade || '';
+      document.getElementById('drUF').value     = d.uf         || '';
+    }
+  } catch {}
+}
+
+/* --- Pagamento --- */
+function drSelecionarPgto(metodo) {
+  pedido.pgto  = metodo;
+  pedido.troco = null;
+  if (metodo === 'dinheiro') {
+    document.getElementById('trocoTotal').textContent = 'Valor do pedido: ' + fmtM(calcTotal());
+    document.getElementById('trocoInput').value = '';
+    document.getElementById('trocoBg').classList.add('open');
+  } else {
+    drawerAbrir('dr-dados');
+  }
+}
+
+function drConfirmarTroco() {
+  pedido.troco = parseFloat(document.getElementById('trocoInput').value) || null;
+  drFecharTroco();
+  drawerAbrir('dr-dados');
+}
+function drFecharTroco() { document.getElementById('trocoBg').classList.remove('open'); }
+
+/* --- Dados --- */
+function drConfirmarDados() {
+  const nome = document.getElementById('drNome').value.trim();
+  const tel  = document.getElementById('drTel').value.trim();
+  if (!nome || !tel) { alert('Preencha seu nome e telefone.'); return; }
+  pedido.cliente = {
+    nome, tel,
+    email: document.getElementById('drEmail').value.trim(),
+    cpf:   document.getElementById('drCPF').value.trim()
+  };
+  renderRevisar();
+  drawerAbrir('dr-revisar');
+}
+
+/* --- Revisar --- */
+function renderRevisar() {
+  const c = pedido.cliente;
+  document.getElementById('drRevCliente').innerHTML = `
+    <div class="rev-hdr"><h3><i class="fas fa-user-circle"></i> ${c.nome}</h3></div>
+    <div class="rev-info">
+      ${c.email ? c.email + '<br>' : ''}
+      +55 ${c.tel}
+    </div>`;
+
+  const tipoLabel = { entrega:'Entrega', retirada:'Retirada', local:'Consumo no local' };
+  const tipoIcon  = { entrega:'fas fa-motorcycle', retirada:'fas fa-store', local:'fas fa-utensils' };
+  let endHtml = '';
+  if (pedido.tipo === 'entrega' && pedido.end.log) {
+    const e = pedido.end;
+    endHtml = `<p class="rev-info"><i class="fas fa-map-marker-alt" style="color:var(--primary);margin-right:4px"></i>${e.log}, ${e.num}${e.comp ? ', '+e.comp : ''}<br>${e.bai}, ${e.cid} – ${e.uf}</p>`;
+  }
+  document.getElementById('drRevEntrega').innerHTML = `
+    <div class="rev-hdr">
+      <h3><i class="${tipoIcon[pedido.tipo]}"></i> ${tipoLabel[pedido.tipo]}</h3>
+      <button class="alt" onclick="drawerAbrir('dr-entrega')">Alterar</button>
+    </div>${endHtml}`;
+
+  const pgLabel = { cartao:'Cartão de crédito/débito', pix:'PIX', dinheiro:'Pagamento em dinheiro' };
+  let trocoHtml = '';
+  if (pedido.pgto === 'dinheiro' && pedido.troco) {
+    trocoHtml = `<div class="rev-info" style="margin-top:4px">Troco para R$ ${fmtN(pedido.troco)}</div>`;
+  }
+  document.getElementById('drRevPgto').innerHTML = `
+    <div class="rev-hdr">
+      <h3><i class="fas fa-dollar-sign"></i> Pagar na hora</h3>
+      <button class="alt" onclick="drawerAbrir('dr-pgto-metodo')">Alterar</button>
+    </div>
+    <p class="rev-info"><strong>${pgLabel[pedido.pgto]}</strong></p>${trocoHtml}`;
+
+  renderTotais();
+}
+
+function renderTotais() {
+  const sub  = calcSub();
+  const taxa = pedido.tipo === 'entrega' ? TAXA : 0;
+  const desc = pedido.desc || 0;
+  const tot  = Math.max(0, sub + taxa - desc);
+  let h = `<div class="tot-row"><span>Subtotal</span><span>${fmtM(sub)}</span></div>`;
+  if (taxa) h += `<div class="tot-row"><span>Taxa de entrega</span><span style="color:#666">+ ${fmtM(taxa)}</span></div>`;
+  if (desc) h += `<div class="tot-row" style="color:#22c55e"><span>Desconto</span><span>- ${fmtM(desc)}</span></div>`;
+  h += `<div class="tot-row final"><span>Total</span><span>${fmtM(tot)}</span></div>`;
+  document.getElementById('drRevTotais').innerHTML = h;
+}
+
+function drToggleCupom() {
+  const box  = document.getElementById('drCupomBox');
+  const chev = document.getElementById('drCupomChev');
+  const open = box.style.display === 'none' || box.style.display === '';
+  box.style.display = open ? 'block' : 'none';
+  chev.className = open ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+}
+
+function drAplicarCupom() {
+  const cod    = document.getElementById('drCupomInput').value.trim().toUpperCase();
+  const cupons = { 'ALDEIA10': 10, 'PROMO5': 5 };
+  if (cupons[cod]) {
+    pedido.desc = cupons[cod];
+    renderTotais();
+    showToast('Cupom aplicado! -R$ ' + fmtN(cupons[cod]));
+  } else {
+    alert('Cupom inválido.');
+  }
+}
+
+/* --- Fazer pedido --- */
+function drFazerPedido() {
+  pedNum++;
+  localStorage.setItem('pda_pedido_num', pedNum);
+  // Salva snapshot antes de limpar o carrinho
+  window._cartSnapshot = [...cart];
+  window._msgWA = gerarMsg();
+  renderConfirmacao();
+  registrarPedidoNoAdmin();
+  drawerAbrir('dr-confirmacao');
+  cart = [];
+  salvarCart();
+  setTimeout(() => showToast('✅ Pedido realizado!'), 500);
+}
+
+/* --- Registrar pedido no painel admin (pedidos_log) --- */
+function registrarPedidoNoAdmin() {
+  try {
+    const now = new Date();
+    const itens = window._cartSnapshot || [];
+    const resumo = itens.map(i => i.qty + 'x ' + i.nome).join(', ');
+    const sub    = itens.reduce((s, i) => s + i.preco * i.qty, 0);
+    const taxa   = pedido.tipo === 'entrega' ? TAXA : 0;
+    const total  = Math.max(0, sub + taxa - (pedido.desc || 0));
+    const pgLabel = { cartao: 'Cartão', pix: 'PIX', dinheiro: 'Dinheiro' };
+    const tipoLabel = { entrega: 'Entrega', retirada: 'Retirada', local: 'No local' };
+
+    const registro = {
+      id:       Date.now(),
+      pedNum:   pedNum,
+      cliente:  pedido.cliente?.nome || 'Cliente',
+      tel:      pedido.cliente?.tel  || '',
+      item:     resumo,
+      total:    fmtM(total),
+      pgto:     pgLabel[pedido.pgto] || pedido.pgto,
+      tipo:     tipoLabel[pedido.tipo] || pedido.tipo,
+      data:     now.toLocaleDateString('pt-BR'),
+      hora:     now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+      obs:      itens.filter(i => i.obs).map(i => i.nome + ': ' + i.obs).join(' | ') || ''
+    };
+
+    const log = JSON.parse(localStorage.getItem('pedidos_log') || '[]');
+    log.push(registro);
+    localStorage.setItem('pedidos_log', JSON.stringify(log));
+  } catch(e) {
+    console.warn('Erro ao registrar pedido no admin:', e);
+  }
+}
+
+function gerarMsg() {
+  const sub  = calcSub();
+  const taxa = pedido.tipo === 'entrega' ? TAXA : 0;
+  const desc = pedido.desc || 0;
+  const tot  = Math.max(0, sub + taxa - desc);
+  const c    = pedido.cliente;
+  const tl   = { entrega:'Entrega', retirada:'Retirada', local:'Consumo no local' };
+  const pl   = { cartao:'Cartão de crédito/débito', pix:'PIX', dinheiro:'Dinheiro' };
+
+  let m = `*🛒 Pedido nº ${pedNum}*\n\n`;
+  m += `👤 Cliente: *${c.nome}*\n`;
+  if (c.cpf) m += `📄 CPF: ${c.cpf}\n`;
+  if (c.tel) m += `📞 Tel: ${c.tel}\n`;
+  m += `📍 *${tl[pedido.tipo]}*\n`;
+  if (pedido.tipo === 'entrega' && pedido.end.log) {
+    const e = pedido.end;
+    m += `${e.log}, ${e.num}${e.comp ? ', '+e.comp : ''}\n${e.bai}, ${e.cid}\n`;
+    if (e.ref) m += `📌 Ref: ${e.ref}\n`;
+  }
+  m += `━━━━━━━━━━━━━━━\n`;
+  cart.forEach(i => { m += `➡️ ${i.qty}x *${i.nome}*\n`; if (i.obs) m += `   Obs: ${i.obs}\n`; m += `   ${fmtM(i.preco * i.qty)}\n\n`; });
+
+  // Usar snapshot salvo antes de limpar
+  if (!cart.length && window._cartSnapshot) {
+    window._cartSnapshot.forEach(i => { m += `➡️ ${i.qty}x *${i.nome}*\n`; if (i.obs) m += `   Obs: ${i.obs}\n`; m += `   ${fmtM(i.preco * i.qty)}\n\n`; });
+  }
+
+  m += `━━━━━━━━━━━━━━━\n`;
+  const pgStr = pedido.pgto === 'dinheiro' && pedido.troco ? `Dinheiro (troco para: R$ ${fmtN(pedido.troco)})` : pl[pedido.pgto];
+  m += `💵 ${pgStr}\n\n`;
+  m += `Subtotal: *${fmtM(sub)}*\n`;
+  if (taxa) m += `Entrega: *${fmtM(taxa)}*\n`;
+  if (desc) m += `Desconto: *-${fmtM(desc)}*\n`;
+  m += `\n💵 *TOTAL: ${fmtM(tot)}*`;
+  return m;
+}
+
+function renderConfirmacao() {
+  const sub  = (window._cartSnapshot || []).reduce((s, i) => s + i.preco * i.qty, 0);
+  const taxa = pedido.tipo === 'entrega' ? TAXA : 0;
+  const desc = pedido.desc || 0;
+  const tot  = Math.max(0, sub + taxa - desc);
+  const now  = new Date();
+  const pl   = { cartao:'Cartão de crédito/débito', pix:'PIX', dinheiro:'Pagamento em dinheiro' };
+
+  document.getElementById('drConfBody').innerHTML = `
+    <div class="conf-hdr"><h2>Pedido ${pedNum}</h2><span class="conf-badge">Aguardando aprovação</span></div>
+    <div class="conf-date">${now.toLocaleDateString('pt-BR')} às ${now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</div>
+    <button class="btn-wa-full" onclick="drEnviarWA()"><i class="fab fa-whatsapp"></i> Enviar pedido no WhatsApp</button>
+    <div class="conf-items">
+      ${window._cartSnapshot.map(i => `<div class="conf-item"><span class="nm">${i.qty}x ${i.nome}</span><span class="vl">${fmtM(i.preco*i.qty)}</span></div>`).join('')}
+    </div>
+    <div class="conf-totals">
+      <div class="conf-tot-row"><span>Subtotal</span><span>${fmtM(sub)}</span></div>
+      ${taxa ? '<div class="conf-tot-row"><span>Entrega</span><span>+ ' + fmtM(taxa) + '</span></div>' : ''}
+      ${desc ? '<div class="conf-tot-row" style="color:#22c55e"><span>Desconto</span><span>- ' + fmtM(desc) + '</span></div>' : ''}
+      <div class="conf-tot-row"><span>TOTAL</span><span>${fmtM(tot)}</span></div>
+    </div>
+    <div class="conf-info">
+      <h4>Pagamento na entrega</h4>
+      <p><strong>${pl[pedido.pgto]}</strong>${pedido.pgto==='dinheiro'&&pedido.troco ? '<br>Troco para R$ '+fmtN(pedido.troco) : ''}</p>
+    </div>
+    ${pedido.tipo==='entrega'&&pedido.end.log ? '<div class="conf-info"><h4>Endereço</h4><p>'+pedido.end.log+', '+pedido.end.num+'<br><strong>'+pedido.end.bai+', '+pedido.end.cid+' – '+pedido.end.uf+'</strong></p></div>' : ''}
+    <button class="btn-voltar-loja" onclick="drawerFechar()">🛒 Continuar comprando</button>`;
+}
+
+function drEnviarWA() {
+  const url = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(window._msgWA || '');
+  window.open(url, '_blank');
+}
+
+/* --- Helpers --- */
+function calcSub()   { return cart.reduce((s, i) => s + i.preco * i.qty, 0); }
+function calcTotal() { return Math.max(0, calcSub() + (pedido.tipo==='entrega'?TAXA:0) - (pedido.desc||0)); }
+function fmtN(v)     { return (parseFloat(v)||0).toFixed(2).replace('.', ','); }
+function fmtM(v)     { return 'R$ ' + fmtN(v); }
+
+function salvarCart() {
+  localStorage.setItem('pda_carrinho', JSON.stringify(cart));
+  atualizarBadge();
+}
+
+function atualizarBadge() {
+  const total = cart.reduce((s, i) => s + i.qty, 0);
+  const badge = document.getElementById('ctBadge');
+  if (badge) {
+    badge.textContent = total;
+    badge.classList.toggle('hidden', total === 0);
+  }
+}
+
+function atualizarBars() {
+  const sub  = calcSub();
+  const taxa = pedido.tipo === 'entrega' ? TAXA : 0;
+  ['drCartSub','drEntSub','drPgtoSub','drMetodoSub'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.textContent = fmtM(sub);
+  });
+  ['drPgtoTaxa','drMetodoTaxa'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.textContent = '+ ' + fmtM(taxa);
+  });
+}
+
+function showToast(msg) {
+  const wrap = document.getElementById('toastWrap');
+  if (!wrap) return;
+  const t = document.createElement('div');
+  t.className   = 'toast success';
+  t.textContent = msg;
+  wrap.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 2500);
+}
+
+/* Máscaras */
+function drMaskCEP(el) {
+  let v = el.value.replace(/\D/g,'').substring(0,8);
+  if (v.length > 5) v = v.substring(0,5) + '-' + v.substring(5);
+  el.value = v;
+}
+function drMaskTel(el) {
+  let v = el.value.replace(/\D/g,'').substring(0,11);
+  if (v.length > 10)     v = v.replace(/(\d{2})(\d{5})(\d{4})/,'($1) $2-$3');
+  else if (v.length > 6) v = v.replace(/(\d{2})(\d{4})(\d{0,4})/,'($1) $2-$3');
+  else if (v.length > 2) v = v.replace(/(\d{2})(\d{0,5})/,'($1) $2');
+  el.value = v;
+}
+function drMaskCPF(el) {
+  let v = el.value.replace(/\D/g,'').substring(0,11);
+  v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4');
+  el.value = v;
+}
+
+/* Aplica cor tema salva pelo admin */
+  function aplicarCorTema(cor) {
+    if (!cor) return;
+    document.documentElement.style.setProperty('--primary', cor);
+    document.documentElement.style.setProperty('--primary-d', ajustarCor(cor, -30));
+    // Aplica também no drawer do carrinho
+    var drawer = document.getElementById('cart-drawer');
+    if (drawer) {
+      drawer.style.setProperty('--dr-red', cor);
+      drawer.style.setProperty('--dr-red-d', ajustarCor(cor, -30));
+    }
+  } document.documentElement.style.setProperty('--primary-d', ajustarCor(cor, -30));
+  }
+
+  function ajustarCor(hex, delta) {
+    var h = hex.replace('#','');
+    var r = Math.max(0, Math.min(255, parseInt(h.substring(0,2),16) + delta));
+    var g = Math.max(0, Math.min(255, parseInt(h.substring(2,4),16) + delta));
+    var b = Math.max(0, Math.min(255, parseInt(h.substring(4,6),16) + delta));
+    return 'rgb('+r+','+g+','+b+')';
+  }
+
+  // Aplica ao carregar
+  aplicarCorTema(localStorage.getItem('pda_cor_tema'));
+
+  // Atualiza em tempo real quando o admin troca a cor (mesmo navegador)
+  window.addEventListener('storage', function(e) {
+    if (e.key === 'pda_cor_tema' && e.newValue) {
+      aplicarCorTema(e.newValue);
+    }
+  });
+
+  // BroadcastChannel para comunicacao entre abas (mesmo origem)
+  try {
+    var bc = new BroadcastChannel('pda_tema');
+    bc.onmessage = function(e) {
+      if (e.data && e.data.cor) aplicarCorTema(e.data.cor);
+    };
+  } catch(err) {}
+})();
+
+/* Inicializa badge */
+atualizarBadge();
+</script>
+</body>
+</html>

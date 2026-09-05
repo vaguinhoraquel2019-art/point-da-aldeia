@@ -1,0 +1,5 @@
+.netlify/
+node_modules/
+*.bat
+*.ps1
+PUBLICAR-GITHUB.bat

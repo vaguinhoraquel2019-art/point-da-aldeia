@@ -1,0 +1,968 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Admin &ndash; Point da Aldeia</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;--card:#1e1e1e;
+  --border:#2a2a2a;--primary:#e8560a;--primary-d:#c44308;
+  --text:#f0f0f0;--text2:#aaa;--success:#00e676;--warning:#ffb300;
+  --danger:#ff1744;--radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+a{text-decoration:none;color:inherit;}
+button{font-family:inherit;cursor:pointer;}
+input,select,textarea{font-family:inherit;}
+
+/* LOGIN */
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem;background:radial-gradient(ellipse at top,#2a1000,#0d0d0d 70%);}
+.login-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.5rem;width:100%;max-width:380px;text-align:center;}
+.login-card .logo{font-size:2.5rem;margin-bottom:.5rem;}
+.login-card h1{font-size:1.4rem;font-weight:800;margin-bottom:.2rem;}
+.login-sub{color:var(--text2);font-size:.88rem;margin-bottom:2rem;}
+.back-link{display:block;margin-top:1.2rem;color:var(--text2);font-size:.85rem;}
+.back-link:hover{color:var(--primary);}
+
+/* LAYOUT */
+.admin-layout{display:flex;min-height:100vh;}
+.sidebar{width:240px;min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:50;transition:transform .3s;}
+.sidebar.collapsed{transform:translateX(-240px);}
+.sidebar-header{padding:1.1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.sidebar-logo{font-size:.95rem;font-weight:800;display:flex;align-items:center;gap:.4rem;}
+.sidebar-logo span{color:var(--primary);}
+.sidebar-close{background:none;border:none;color:var(--text2);font-size:1rem;display:none;}
+.sidebar-nav{flex:1;padding:.75rem 0;overflow-y:auto;}
+.nav-group-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text2);padding:.4rem 1.25rem;margin-top:.4rem;}
+.nav-item{display:flex;align-items:center;gap:.65rem;padding:.6rem 1.25rem;color:var(--text2);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-size:.875rem;border-left:3px solid transparent;transition:all .18s;}
+.nav-item:hover{background:var(--bg3);color:var(--text);}
+.nav-item.active{color:var(--primary);background:rgba(232,86,10,.1);border-left-color:var(--primary);}
+.nav-item i{width:18px;text-align:center;font-size:.9rem;}
+.sidebar-footer{padding:.9rem 1.25rem;border-top:1px solid var(--border);font-size:.82rem;color:var(--text2);}
+.sidebar-footer strong{display:block;color:var(--text);font-size:.875rem;}
+
+/* CONTENT */
+.content-wrap{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{position:sticky;top:0;z-index:40;background:rgba(13,13,13,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;padding:0 1.5rem;height:54px;}
+.menu-btn{background:none;border:none;color:var(--text);font-size:1.2rem;display:none;}
+.topbar-title{font-size:1rem;font-weight:700;flex:1;}
+.btn-logout{background:transparent;border:1px solid var(--border);color:var(--text2);padding:.32rem .85rem;border-radius:8px;font-size:.82rem;}
+.btn-logout:hover{border-color:var(--danger);color:var(--danger);}
+.admin-content{padding:1.75rem;flex:1;}
+
+/* CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1rem;margin-bottom:1.75rem;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;}
+.stat-icon{font-size:1.8rem;margin-bottom:.4rem;}
+.stat-val{font-size:1.5rem;font-weight:800;}
+.stat-label{font-size:.78rem;color:var(--text2);margin-top:.15rem;}
+
+.table-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1.75rem;}
+.table-header{padding:.9rem 1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap;}
+.table-header h2{font-size:.95rem;font-weight:700;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:.875rem;}
+thead tr{background:var(--bg3);}
+th{padding:.65rem .9rem;text-align:left;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);white-space:nowrap;}
+td{padding:.65rem .9rem;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.015);}
+
+/* BADGES */
+.badge{display:inline-block;padding:.18rem .55rem;border-radius:50px;font-size:.73rem;font-weight:600;}
+.badge-success{background:rgba(0,230,118,.15);color:var(--success);}
+.badge-warning{background:rgba(255,179,0,.15);color:var(--warning);}
+.badge-danger{background:rgba(255,23,68,.15);color:var(--danger);}
+.badge-info{background:rgba(232,86,10,.15);color:var(--primary);}
+
+/* BUTTONS */
+.btn-primary{background:var(--primary);color:#fff;border:none;padding:.5rem 1.1rem;border-radius:8px;font-weight:600;font-size:.875rem;}
+.btn-primary:hover{background:var(--primary-d);}
+.btn-secondary{background:var(--card);color:var(--text);border:1px solid var(--border);padding:.45rem .9rem;border-radius:8px;font-size:.82rem;}
+.btn-secondary:hover{border-color:var(--primary);}
+.btn-danger{background:rgba(255,23,68,.1);color:var(--danger);border:1px solid rgba(255,23,68,.25);padding:.38rem .75rem;border-radius:6px;font-size:.82rem;}
+.btn-danger:hover{background:var(--danger);color:#fff;}
+.btn-edit{background:rgba(232,86,10,.1);color:var(--primary);border:1px solid rgba(232,86,10,.25);padding:.38rem .75rem;border-radius:6px;font-size:.82rem;}
+.btn-edit:hover{background:var(--primary);color:#fff;}
+.actions-col{display:flex;gap:.4rem;flex-wrap:wrap;}
+
+/* FORMS */
+.form-group{margin-bottom:1rem;}
+.form-group label{display:block;font-size:.82rem;color:var(--text2);margin-bottom:.28rem;font-weight:500;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:.55rem .85rem;background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-size:.875rem;transition:border .2s;}
+.form-group textarea{resize:vertical;min-height:80px;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--primary);outline:none;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.form-erro{color:var(--danger);font-size:.82rem;min-height:1.1em;}
+.toggle-switch{display:inline-flex;align-items:center;gap:.5rem;cursor:pointer;}
+.toggle-switch input{display:none;}
+.toggle-track{width:38px;height:20px;background:var(--border);border-radius:10px;transition:background .2s;position:relative;}
+.toggle-track::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;background:#fff;border-radius:50%;transition:left .2s;}
+.toggle-switch input:checked~.toggle-track{background:var(--primary);}
+.toggle-switch input:checked~.toggle-track::after{left:21px;}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:300;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.75rem;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;}
+.modal h2{font-size:1.1rem;font-weight:800;margin-bottom:1.25rem;}
+.modal-footer{display:flex;gap:.6rem;justify-content:flex-end;margin-top:1.25rem;padding-top:.9rem;border-top:1px solid var(--border);}
+
+/* MISC */
+.search-input{padding:.45rem .85rem;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.82rem;outline:none;width:200px;}
+.search-input:focus{border-color:var(--primary);}
+.loading{text-align:center;padding:3rem;color:var(--text2);}
+.spinner{width:28px;height:28px;border:2.5px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.toast-wrap{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:.4rem;}
+.toast{background:var(--card);border:1px solid var(--border);padding:.65rem 1.1rem;border-radius:10px;font-size:.85rem;animation:slideIn .3s ease;min-width:200px;}
+.toast.success{border-color:var(--success);color:var(--success);}
+.toast.error{border-color:var(--danger);color:var(--danger);}
+.toast.warning{border-color:var(--warning);color:var(--warning);}
+@keyframes slideIn{from{transform:translateX(30px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+.empty-row td{text-align:center;color:var(--text2);padding:2.5rem;font-size:.9rem;}
+
+@media(max-width:900px){
+  .sidebar{transform:translateX(-240px);}
+  .sidebar.open{transform:translateX(0);}
+  .content-wrap{margin-left:0;}
+  .menu-btn{display:block;}
+  .sidebar-close{display:block;}
+  .form-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="logo">&#9881;</div>
+    <h1>Painel Admin</h1>
+    <p class="login-sub">POINT DA ALDEIA</p>
+    <form onsubmit="fazerLogin(event)">
+      <div class="form-group"><label>Usu&aacute;rio</label><input type="text" id="loginUser" placeholder="admin" required autocomplete="username"></div>
+      <div class="form-group"><label>Senha</label><input type="password" id="loginSenha" placeholder="••••••" required autocomplete="current-password"></div>
+      <p id="loginErro" class="form-erro"></p>
+      <button type="submit" class="btn-primary" style="width:100%;padding:.65rem;font-size:.95rem;">Entrar</button>
+    </form>
+    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Voltar &agrave; loja</a>
+  </div>
+</div>
+
+<!-- ===== PAINEL ===== -->
+<div id="adminPanel" style="display:none" class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">&#127869; <span>POINT</span>&nbsp;ADMIN</div>
+      <button class="sidebar-close" onclick="toggleSidebar()"><i class="fas fa-times"></i></button>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-group-label">Geral</div>
+      <button class="nav-item active" id="nav-dashboard" onclick="ir('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</button>
+
+      <div class="nav-group-label">Card&aacute;pio</div>
+      <button class="nav-item" id="nav-categorias" onclick="ir('categorias')"><i class="fas fa-tags"></i> Categorias</button>
+      <button class="nav-item" id="nav-produtos" onclick="ir('produtos')"><i class="fas fa-utensils"></i> Produtos</button>
+
+      <div class="nav-group-label">Opera&ccedil;&atilde;o</div>
+      <button class="nav-item" id="nav-pedidos" onclick="ir('pedidos')"><i class="fas fa-receipt"></i> Pedidos WhatsApp</button>
+      <button class="nav-item" id="nav-horarios" onclick="ir('horarios')"><i class="fas fa-clock"></i> Hor&aacute;rios</button>
+
+      <div class="nav-group-label">Loja</div>
+      <button class="nav-item" id="nav-config" onclick="ir('config')"><i class="fas fa-cog"></i> Configura&ccedil;&otilde;es</button>
+    </nav>
+    <div class="sidebar-footer" id="sidebarFooter"></div>
+  </aside>
+
+  <!-- CONTENT -->
+  <div class="content-wrap">
+    <header class="topbar">
+      <button class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <span class="topbar-title" id="topbarTitle">Dashboard</span>
+      <a href="index.html" target="_blank" class="btn-secondary" style="font-size:.78rem;padding:.3rem .75rem;"><i class="fas fa-external-link-alt"></i> Ver loja</a>
+      <button class="btn-logout" onclick="sair()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+    </header>
+    <main class="admin-content" id="adminContent">
+      <div class="loading"><div class="spinner"></div>Carregando...</div>
+    </main>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)fecharModal()">
+  <div class="modal" onclick="event.stopPropagation()" id="modalBox"></div>
+</div>
+
+<!-- TOASTS -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* Proteção básica no admin — sem bloquear DevTools pois é painel do dono */
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', function(e) {
+  const ctrl = e.ctrlKey || e.metaKey;
+  // Bloqueia Ctrl+U (ver fonte) e Ctrl+S (salvar)
+  if (ctrl && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) {
+    e.preventDefault(); return false;
+  }
+});
+// Bloqueia ser embutido em iframe
+if (window.self !== window.top) { window.top.location = window.self.location; }
+</script>
+
+<script>
+/* =============================================
+   AUTENTICAÇÃO — SHA-256 + bloqueio por tentativas
+   ============================================= */
+
+// Hash SHA-256 de "aldeia123" — gerado com crypto.subtle
+// Para trocar: https://emn178.github.io/online-tools/sha256.html
+const SENHA_HASH = '680885d41d2490517923ab9c343c950bfec3275ab61cb0d467f98b23a74ee240';
+
+async function hashSenha(senha) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(senha));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+let logado = false;
+let tentativas = parseInt(sessionStorage.getItem('adm_t') || '0');
+
+async function fazerLogin(e) {
+  e.preventDefault();
+  const erroEl = document.getElementById('loginErro');
+  if (tentativas >= 5) {
+    erroEl.textContent = 'Acesso bloqueado. Aguarde 30 segundos.';
+    return;
+  }
+  const user  = document.getElementById('loginUser').value.trim();
+  const senha = document.getElementById('loginSenha').value;
+  const hash  = await hashSenha(senha);
+  if (user === 'admin' && hash === SENHA_HASH) {
+    tentativas = 0;
+    sessionStorage.removeItem('adm_t');
+    logado = true;
+    sessionStorage.setItem('adminLogado','1');
+    sessionStorage.setItem('adminTs', Date.now().toString());
+    initDefaultData();
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminPanel').style.display  = 'flex';
+    document.getElementById('sidebarFooter').innerHTML   = '<strong>Administrador</strong><br>Point da Aldeia';
+    ir('dashboard');
+  } else {
+    tentativas++;
+    sessionStorage.setItem('adm_t', tentativas);
+    const r = 5 - tentativas;
+    if (r > 0) {
+      erroEl.textContent = 'Senha incorreta. (' + r + ' tentativa' + (r > 1 ? 's' : '') + ' restante' + (r > 1 ? 's' : '') + ')';
+    } else {
+      erroEl.textContent = 'Bloqueado por 30 segundos.';
+      setTimeout(() => { tentativas = 0; sessionStorage.setItem('adm_t','0'); erroEl.textContent = ''; }, 30000);
+    }
+  }
+}
+
+function sair() {
+  logado = false;
+  sessionStorage.removeItem('adminLogado');
+  sessionStorage.removeItem('adminTs');
+  document.getElementById('adminPanel').style.display  = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+}
+
+function checarSessao() {
+  const ts = parseInt(sessionStorage.getItem('adminTs') || '0');
+  if (ts && Date.now() - ts > 2 * 60 * 60 * 1000) sair();
+}
+setInterval(checarSessao, 60000);
+
+document.addEventListener('DOMContentLoaded', function () {
+  if (sessionStorage.getItem('adminLogado') === '1') {
+    checarSessao();
+    if (sessionStorage.getItem('adminLogado') === '1') {
+      logado = true;
+      initDefaultData();
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminPanel').style.display  = 'flex';
+      document.getElementById('sidebarFooter').innerHTML   = '<strong>Administrador</strong><br>Point da Aldeia';
+      ir('dashboard');
+    }
+  }
+});
+
+/* =============================================
+   NAVEGAÇÃO
+   ============================================= */
+const TITLES = {
+  dashboard: 'Dashboard',
+  categorias: 'Categorias do Card\u00e1pio',
+  produtos: 'Produtos',
+  pedidos: 'Pedidos via WhatsApp',
+  horarios: 'Hor\u00e1rios de Funcionamento',
+  config: 'Configura\u00e7\u00f5es da Loja'
+};
+
+function ir(section) {
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + section);
+  if (navEl) navEl.classList.add('active');
+  document.getElementById('topbarTitle').textContent = TITLES[section] || section;
+  const fns = { dashboard, categorias, produtos, pedidos, horarios, config };
+  if (fns[section]) fns[section]();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+/* =============================================
+   STORAGE HELPERS
+   ============================================= */
+/* Dados padrão do cardápio */
+const CATS_DEFAULT = [
+  { id: 1, nome: 'Porções',     icone: '🍗' },
+  { id: 2, nome: 'Bebidas',     icone: '🍺' },
+  { id: 3, nome: 'Caipirinhas', icone: '🍹' },
+  { id: 4, nome: 'Batidas',     icone: '🥛' },
+  { id: 5, nome: 'Doses',       icone: '🥃' }
+];
+
+const PRODS_DEFAULT = [
+  // PORÇÕES
+  { id:101, nome:'Batata G',        preco:80,  cat_id:1, desc:'Porção grande de batata frita crocante.',              tipo:'Porção',  destaque:false },
+  { id:102, nome:'Batata Meia',     preco:60,  cat_id:1, desc:'Meia porção de batata frita crocante.',                tipo:'Porção',  destaque:false },
+  { id:103, nome:'Batata Pequena',  preco:40,  cat_id:1, desc:'Porção pequena de batata frita crocante.',             tipo:'Porção',  destaque:false },
+  { id:104, nome:'Calabresa G',     preco:80,  cat_id:1, desc:'Porção grande de calabresa grelhada.',                 tipo:'Porção',  destaque:false },
+  { id:105, nome:'Calabresa Meia',  preco:60,  cat_id:1, desc:'Meia porção de calabresa grelhada.',                   tipo:'Porção',  destaque:false },
+  { id:106, nome:'Frango 1K',       preco:85,  cat_id:1, desc:'Porção de 1kg de frango frito ou assado.',             tipo:'Porção',  destaque:true  },
+  { id:107, nome:'Tilápia 1K',      preco:120, cat_id:1, desc:'Porção de 1kg de tilápia frita ou grelhada.',          tipo:'Porção',  destaque:false },
+  { id:108, nome:'Isca 1K',         preco:150, cat_id:1, desc:'Porção de 1kg de isca de peixe frita.',                tipo:'Porção',  destaque:false },
+  { id:109, nome:'Isca Meia',       preco:100, cat_id:1, desc:'Meia porção de isca de peixe frita.',                  tipo:'Porção',  destaque:false },
+  { id:110, nome:'Cação 1K',        preco:160, cat_id:1, desc:'Porção de 1kg de cação frito ou grelhado.',            tipo:'Porção',  destaque:false },
+  { id:111, nome:'Cação Média',     preco:110, cat_id:1, desc:'Porção média de cação frito ou grelhado.',             tipo:'Porção',  destaque:false },
+  { id:112, nome:'Camarão 1K',      preco:150, cat_id:1, desc:'Porção de 1kg de camarão.',                            tipo:'Porção',  destaque:true  },
+  { id:113, nome:'Camarão Meia',    preco:100, cat_id:1, desc:'Meia porção de camarão.',                              tipo:'Porção',  destaque:false },
+  { id:114, nome:'Porquinho 1K',    preco:150, cat_id:1, desc:'Porção de 1kg de porquinho assado ou frito.',          tipo:'Porção',  destaque:false },
+  { id:115, nome:'Porquinho Meia',  preco:100, cat_id:1, desc:'Meia porção de porquinho assado ou frito.',            tipo:'Porção',  destaque:false },
+  // BEBIDAS
+  { id:201, nome:'Água P',                preco:4,  cat_id:2, desc:'Água mineral pequena gelada.',               tipo:'Bebida',  destaque:false },
+  { id:202, nome:'Água G',                preco:7,  cat_id:2, desc:'Água mineral grande gelada.',                tipo:'Bebida',  destaque:false },
+  { id:203, nome:'Skol',                  preco:5,  cat_id:2, desc:'Skol lata 350ml bem gelada.',                tipo:'Cerveja', destaque:false },
+  { id:204, nome:'Itaipava',              preco:4,  cat_id:2, desc:'Itaipava lata 350ml bem gelada.',            tipo:'Cerveja', destaque:false },
+  { id:205, nome:'Amstel',               preco:6,  cat_id:2, desc:'Amstel lata 350ml bem gelada.',               tipo:'Cerveja', destaque:false },
+  { id:206, nome:'Império',              preco:5,  cat_id:2, desc:'Império lata 350ml bem gelada.',              tipo:'Cerveja', destaque:false },
+  { id:207, nome:'Budweiser',            preco:6,  cat_id:2, desc:'Budweiser lata 350ml bem gelada.',            tipo:'Cerveja', destaque:false },
+  { id:208, nome:'Heineken',             preco:7,  cat_id:2, desc:'Heineken lata 350ml bem gelada.',             tipo:'Cerveja', destaque:true  },
+  { id:209, nome:'Original',             preco:6,  cat_id:2, desc:'Original lata 350ml bem gelada.',             tipo:'Cerveja', destaque:false },
+  { id:210, nome:'Sem Álcool',           preco:7,  cat_id:2, desc:'Cerveja sem álcool bem gelada.',              tipo:'Cerveja', destaque:false },
+  { id:211, nome:'Smirnoff Ice',         preco:15, cat_id:2, desc:'Smirnoff Ice gelado.',                        tipo:'Bebida',  destaque:false },
+  { id:212, nome:'51 Ice',               preco:12, cat_id:2, desc:'51 Ice gelado.',                              tipo:'Bebida',  destaque:false },
+  { id:213, nome:'Guaraviton',           preco:6,  cat_id:2, desc:'Guaraviton energético gelado.',               tipo:'Bebida',  destaque:false },
+  { id:214, nome:'Gatorade',             preco:10, cat_id:2, desc:'Gatorade isotônico gelado.',                  tipo:'Bebida',  destaque:false },
+  { id:215, nome:'Refrigerante Lata',    preco:6,  cat_id:2, desc:'Diversas marcas. A partir de R$ 6,00.',       tipo:'Bebida',  destaque:false },
+  { id:216, nome:'Refrigerante 2L',      preco:12, cat_id:2, desc:'Refrigerante garrafa 2 litros.',              tipo:'Bebida',  destaque:false },
+  { id:217, nome:'Refrigerante 1L',      preco:8,  cat_id:2, desc:'Refrigerante garrafa 1 litro.',               tipo:'Bebida',  destaque:false },
+  { id:218, nome:'Refrigerante 1,5L',    preco:10, cat_id:2, desc:'Refrigerante garrafa 1,5 litros.',            tipo:'Bebida',  destaque:false },
+  // CAIPIRINHAS
+  { id:301, nome:'Caipirinha de Pinga',   preco:25, cat_id:3, desc:'Caipirinha feita com pinga, limão e açúcar.',    tipo:'Caipirinha', destaque:false },
+  { id:302, nome:'Caipirinha de Vodka',   preco:30, cat_id:3, desc:'Caipirinha feita com vodka, limão e açúcar.',    tipo:'Caipirinha', destaque:false },
+  { id:303, nome:'Caipirinha Smirnoff',   preco:40, cat_id:3, desc:'Caipirinha feita com Smirnoff, limão e açúcar.', tipo:'Caipirinha', destaque:false },
+  { id:304, nome:'Caipirinha de Saquê',   preco:40, cat_id:3, desc:'Caipirinha feita com saquê, limão e açúcar.',    tipo:'Caipirinha', destaque:false },
+  // BATIDAS
+  { id:401, nome:'Batida de Pinga',   preco:30, cat_id:4, desc:'Batida cremosa feita com pinga e frutas.',    tipo:'Batida', destaque:false },
+  { id:402, nome:'Batida de Vodka',   preco:35, cat_id:4, desc:'Batida cremosa feita com vodka e frutas.',    tipo:'Batida', destaque:false },
+  { id:403, nome:'Batida Smirnoff',   preco:45, cat_id:4, desc:'Batida cremosa feita com Smirnoff e frutas.', tipo:'Batida', destaque:false },
+  { id:404, nome:'Batida de Saquê',   preco:45, cat_id:4, desc:'Batida cremosa feita com saquê e frutas.',    tipo:'Batida', destaque:false },
+  // DOSES
+  { id:501, nome:'Dose Cavalo',     preco:35, cat_id:5, desc:'Dose cavalo de destilado.',                    tipo:'Dose', destaque:false },
+  { id:502, nome:'Dose Red Label',  preco:40, cat_id:5, desc:'Dose de Johnnie Walker Red Label.',            tipo:'Dose', destaque:false }
+];
+
+function getStore(key, def) {
+  try {
+    const val = localStorage.getItem(key);
+    if (val === null) return def;
+    return JSON.parse(val);
+  } catch { return def; }
+}
+function setStore(key, val) {
+  localStorage.setItem(key, JSON.stringify(val));
+}
+
+/* Popula dados padrão na primeira vez */
+function initDefaultData() {
+  // Versão dos dados — incrementar aqui força reset do cardápio
+  const DATA_VERSION = '3';
+  const storedVersion = localStorage.getItem('pda_data_version');
+
+  if (storedVersion !== DATA_VERSION) {
+    // Dados desatualizados ou primeira vez: reseta categorias e produtos
+    setStore('categorias', CATS_DEFAULT);
+    setStore('produtos', PRODS_DEFAULT);
+    localStorage.setItem('pda_data_version', DATA_VERSION);
+    localStorage.setItem('pda_initialized', '1');
+  }
+}
+
+/* =============================================
+   IMAGEM PRODUTO
+   ============================================= */
+function previewImagem(input) {
+  const file = input.files ? input.files[0] : input;
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) { toast('Imagem muito grande. Máx. 10MB.', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const base64 = e.target.result;
+    const b64el  = document.getElementById('pImagemBase64');
+    const prevImg = document.getElementById('imgPreviewImg');
+    const prevBox = document.getElementById('imgPreview');
+    const prevWrap = document.getElementById('imgPreviewWrap');
+    if (b64el)   b64el.value  = base64;
+    if (prevImg) prevImg.src  = base64;
+    if (prevBox)  prevBox.style.display  = 'none';
+    if (prevWrap) prevWrap.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleImgDrop(e) {
+  e.preventDefault();
+  const zone = document.getElementById('imgDropZone');
+  if (zone) zone.style.borderColor = 'var(--border)';
+  const file = e.dataTransfer?.files[0];
+  if (!file || !file.type.startsWith('image/')) return;
+  previewImagem(file);
+}
+
+function removerImagem() {
+  const b64el  = document.getElementById('pImagemBase64');
+  const prevImg = document.getElementById('imgPreviewImg');
+  const prevBox = document.getElementById('imgPreview');
+  const prevWrap = document.getElementById('imgPreviewWrap');
+  const inp    = document.getElementById('pImagem');
+  if (b64el)   b64el.value  = '';
+  if (prevImg) prevImg.src  = '';
+  if (inp)     inp.value    = '';
+  if (prevBox)  prevBox.style.display  = 'block';
+  if (prevWrap) prevWrap.style.display = 'none';
+}
+
+/* =============================================
+   MODAL / TOAST
+   ============================================= */
+function abrirModal(html) {
+  document.getElementById('modalBox').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function fecharModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function toast(msg, tipo = 'success') {
+  const wrap = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = 'toast ' + tipo;
+  t.textContent = msg;
+  wrap.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
+}
+function fmtMoeda(v) { return 'R$ ' + (parseFloat(v) || 0).toFixed(2).replace('.', ','); }
+
+/* =============================================
+   DASHBOARD
+   ============================================= */
+function dashboard() {
+  const produtos = getStore('produtos', []);
+  const cats     = getStore('categorias', []);
+  const pedidos  = getStore('pedidos_log', []);
+
+  const totalPedidos = pedidos.length;
+  const hojeStr = new Date().toLocaleDateString('pt-BR');
+  const pedHoje = pedidos.filter(p => p.data === hojeStr).length;
+
+  document.getElementById('adminContent').innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-icon"><i class="fas fa-utensils" style="color:var(--primary)"></i></div><div class="stat-val">${produtos.length}</div><div class="stat-label">Produtos no Card&aacute;pio</div></div>
+      <div class="stat-card"><div class="stat-icon"><i class="fas fa-tags" style="color:var(--warning)"></i></div><div class="stat-val">${cats.length}</div><div class="stat-label">Categorias</div></div>
+      <div class="stat-card"><div class="stat-icon"><i class="fab fa-whatsapp" style="color:#25D366"></i></div><div class="stat-val">${pedHoje}</div><div class="stat-label">Pedidos Hoje</div></div>
+      <div class="stat-card"><div class="stat-icon"><i class="fas fa-receipt" style="color:var(--success)"></i></div><div class="stat-val">${totalPedidos}</div><div class="stat-label">Total de Pedidos</div></div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-header"><h2><i class="fas fa-clock"></i> Status do Restaurante</h2></div>
+      <div style="padding:1.25rem;display:flex;flex-direction:column;gap:1rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:.9rem 1rem;background:var(--bg3);border-radius:10px;border:1px solid var(--border)">
+          <div>
+            <div style="font-weight:700;margin-bottom:.2rem">Funcionamento</div>
+            <div style="font-size:.82rem;color:var(--text2)">Todos os dias &bull; 11:00 – 20:00</div>
+          </div>
+          <div id="dashStatus"></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:.9rem 1rem;background:var(--bg3);border-radius:10px;border:1px solid var(--border)">
+          <div>
+            <div style="font-weight:700;margin-bottom:.2rem">WhatsApp para Pedidos</div>
+            <div style="font-size:.82rem;color:var(--text2)">(13) 99788-6293</div>
+          </div>
+          <a href="https://wa.me/5513997886293" target="_blank" class="btn-primary" style="font-size:.82rem"><i class="fab fa-whatsapp"></i> Abrir</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-header"><h2><i class="fas fa-receipt"></i> &Uacute;ltimos Pedidos Registrados</h2><button class="btn-secondary" onclick="ir('pedidos')">Ver todos</button></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>#</th><th>Cliente</th><th>Item</th><th>Data</th><th>A&ccedil;&otilde;es</th></tr></thead>
+        <tbody>${pedidos.slice(-8).reverse().map((p,i) =>
+          `<tr><td style="color:var(--text2)">${pedidos.length - i}</td><td>${p.cliente}</td><td>${p.item}</td><td style="color:var(--text2)">${p.data} ${p.hora}</td>
+          <td><a href="https://wa.me/5513997886293?text=Ol%C3%A1+${encodeURIComponent(p.cliente)}!+Seu+pedido+de+${encodeURIComponent(p.item)}+est%C3%A1+pronto!" target="_blank" class="btn-edit" style="font-size:.75rem"><i class="fab fa-whatsapp"></i> Responder</a></td></tr>`
+        ).join('') || '<tr><td colspan="5" class="empty-row" style="text-align:center;color:var(--text2);padding:2rem">Nenhum pedido registrado ainda.</td></tr>'}
+        </tbody>
+      </table></div>
+    </div>`;
+
+  // Status
+  const now  = new Date();
+  const mins = now.getHours() * 60 + now.getMinutes();
+  const open = mins >= 660 && mins < 1200;
+  document.getElementById('dashStatus').innerHTML = open
+    ? '<span class="badge badge-success"><i class="fas fa-circle" style="font-size:.5rem"></i> Aberto agora</span>'
+    : '<span class="badge badge-danger"><i class="fas fa-circle" style="font-size:.5rem"></i> Fechado</span>';
+}
+
+/* =============================================
+   CATEGORIAS
+   ============================================= */
+function categorias() {
+  const cats = getStore('categorias', CATS_DEFAULT);
+
+  document.getElementById('adminContent').innerHTML = `
+    <div class="table-card">
+      <div class="table-header">
+        <h2><i class="fas fa-tags"></i> Categorias</h2>
+        <button class="btn-primary" onclick="modalNovaCategoria()"><i class="fas fa-plus"></i> Nova Categoria</button>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Ícone</th><th>Nome</th><th>Ações</th></tr></thead>
+        <tbody>${cats.map(c => `
+          <tr>
+            <td style="font-size:1.4rem">${c.icone}</td>
+            <td style="font-weight:600">${c.nome}</td>
+            <td><div class="actions-col">
+              <button class="btn-edit" onclick="editarCategoria(${c.id})"><i class="fas fa-pen"></i> Editar</button>
+              <button class="btn-danger" onclick="deletarCategoria(${c.id})"><i class="fas fa-trash"></i></button>
+            </div></td>
+          </tr>`).join('') || '<tr><td colspan="3" class="empty-row">Nenhuma categoria.</td></tr>'}
+        </tbody>
+      </table></div>
+    </div>`;
+}
+
+function modalNovaCategoria(cat) {
+  const edit = !!cat;
+  abrirModal(`
+    <h2><i class="fas fa-tags"></i> ${edit ? 'Editar' : 'Nova'} Categoria</h2>
+    <div class="form-group"><label>Ícone (emoji)</label><input type="text" id="cIcone" value="${cat?.icone || ''}" placeholder="🍗" style="font-size:1.5rem;width:80px"></div>
+    <div class="form-group"><label>Nome da Categoria</label><input type="text" id="cNome" value="${cat?.nome || ''}" required></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="fecharModal()">Cancelar</button>
+      <button class="btn-primary" onclick="salvarCategoria(${cat?.id || 'null'})">${edit ? 'Salvar' : 'Criar'}</button>
+    </div>`);
+}
+
+function salvarCategoria(id) {
+  const nome  = document.getElementById('cNome').value.trim();
+  const icone = document.getElementById('cIcone').value.trim();
+  if (!nome) { toast('Informe o nome', 'error'); return; }
+  const cats = getStore('categorias', []);
+  if (id) {
+    const idx = cats.findIndex(c => c.id === id);
+    if (idx > -1) { cats[idx].nome = nome; cats[idx].icone = icone || '🍽'; }
+  } else {
+    const newId = Date.now();
+    cats.push({ id: newId, nome, icone: icone || '🍽' });
+  }
+  setStore('categorias', cats);
+  fecharModal(); categorias();
+  toast(id ? 'Categoria atualizada!' : 'Categoria criada!');
+}
+
+function editarCategoria(id) {
+  const cats = getStore('categorias', []);
+  const cat  = cats.find(c => c.id === id);
+  if (cat) modalNovaCategoria(cat);
+}
+
+function deletarCategoria(id) {
+  if (!confirm('Excluir esta categoria?')) return;
+  const cats = getStore('categorias', []).filter(c => c.id !== id);
+  setStore('categorias', cats);
+  categorias();
+  toast('Categoria excluída', 'warning');
+}
+
+/* =============================================
+   PRODUTOS
+   ============================================= */
+function produtos() {
+  const prods = getStore('produtos', PRODS_DEFAULT);
+  const cats  = getStore('categorias', CATS_DEFAULT);
+
+  document.getElementById('adminContent').innerHTML = `
+    <div class="table-card">
+      <div class="table-header">
+        <h2><i class="fas fa-utensils"></i> Produtos (${prods.length})</h2>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <input type="text" class="search-input" id="prodBusca" placeholder="Buscar produto..." oninput="filtrarProdutos()">
+          <button class="btn-secondary" onclick="if(confirm('Atualizar cardápio com os dados do cardápio real?')){setStore('produtos',PRODS_DEFAULT);setStore('categorias',CATS_DEFAULT);localStorage.setItem('pda_data_version','3');produtos();toast('Cardápio atualizado!','success')}"><i class="fas fa-sync"></i> Atualizar</button>
+          <button class="btn-primary" onclick="modalNovoProduto()"><i class="fas fa-plus"></i> Novo Produto</button>
+        </div>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Nome</th><th>Categoria</th><th>Preço</th><th>Destaque</th><th>Ações</th></tr></thead>
+        <tbody id="prodsTbody">${renderProdsTbody(prods, cats)}</tbody>
+      </table></div>
+    </div>`;
+}
+
+function renderProdsTbody(prods, cats) {
+  if (!prods.length) return '<tr><td colspan="5" class="empty-row">Nenhum produto cadastrado.</td></tr>';
+  return prods.map(p => {
+    const cat = cats.find(c => c.id === p.cat_id);
+    const imgHtml = p.imagem
+      ? '<img src="'+p.imagem+'" style="width:48px;height:48px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px">'
+      : '<span style="font-size:1.4rem;margin-right:8px">🍽</span>';
+    return `<tr>
+      <td><div style="display:flex;align-items:center">${imgHtml}<div><strong>${p.nome}</strong><br><span style="font-size:.75rem;color:var(--text2)">${p.desc?.substring(0,45) || ''}…</span></div></div></td>
+      <td><span class="badge badge-info">${cat?.nome || '-'}</span></td>
+      <td style="font-weight:700;color:var(--success)">${fmtMoeda(p.preco)}</td>
+      <td>${p.destaque ? '<span class="badge badge-warning">★ Destaque</span>' : '<span style="color:var(--text2);font-size:.8rem">—</span>'}</td>
+      <td><div class="actions-col">
+        <button class="btn-edit" onclick="modalEditarProduto(${p.id})"><i class="fas fa-pen"></i> Editar</button>
+        <button class="btn-danger" onclick="deletarProduto(${p.id})"><i class="fas fa-trash"></i></button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+function filtrarProdutos() {
+  const q     = document.getElementById('prodBusca')?.value.toLowerCase() || '';
+  const prods = getStore('produtos', []).filter(p => p.nome.toLowerCase().includes(q) || (p.desc || '').toLowerCase().includes(q));
+  const cats  = getStore('categorias', []);
+  const tbody = document.getElementById('prodsTbody');
+  if (tbody) tbody.innerHTML = renderProdsTbody(prods, cats);
+}
+
+function modalNovoProduto(prod) {
+  const cats = getStore('categorias', CATS_DEFAULT);
+  const edit = !!prod;
+  abrirModal(`
+    <h2><i class="fas fa-utensils"></i> ${edit ? 'Editar' : 'Novo'} Produto</h2>
+    <div class="form-group"><label>Nome do Produto *</label><input type="text" id="pNome" value="${prod?.nome || ''}" required></div>
+    <div class="form-row">
+      <div class="form-group"><label>Preço (R$) *</label><input type="number" id="pPreco" value="${prod?.preco || ''}" step="0.01" min="0" required></div>
+      <div class="form-group"><label>Categoria *</label>
+        <select id="pCat">
+          ${cats.map(c => `<option value="${c.id}" ${prod?.cat_id === c.id ? 'selected' : ''}>${c.nome}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label>Descrição</label><textarea id="pDesc">${prod?.desc || ''}</textarea></div>
+    <div class="form-group"><label>Tamanho / Tipo (ex: Porção Grande, Prato Principal)</label><input type="text" id="pTipo" value="${prod?.tipo || ''}"></div>
+    <div class="form-group">
+      <label class="toggle-switch">
+        <input type="checkbox" id="pDestaque" ${prod?.destaque ? 'checked' : ''}>
+        <span class="toggle-track"></span>
+        <span style="font-size:.85rem">Produto em destaque</span>
+      </label>
+    </div>
+    <div class="form-group"><label>Link do WhatsApp (personalizado)</label><input type="text" id="pWa" value="${prod?.wa || ''}" placeholder="https://wa.me/5513997886293?text=..."></div>
+    <div class="form-group">
+      <label>Foto do Produto</label>
+      ${prod?.imagem ? '<img src="'+prod.imagem+'" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px;display:block">' : ''}
+      <div style="border:2px dashed var(--border);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:border .2s" id="imgDropZone" onclick="document.getElementById('pImagem').click()" ondragover="event.preventDefault();this.style.borderColor='var(--primary)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleImgDrop(event)">
+        <div id="imgPreview" style="display:${prod?.imagem ? 'none' : 'block'}">
+          <i class="fas fa-image" style="font-size:2rem;color:var(--text2);margin-bottom:8px;display:block"></i>
+          <p style="font-size:.85rem;color:var(--text2)">Clique ou arraste uma imagem aqui</p>
+          <p style="font-size:.75rem;color:var(--text2);margin-top:4px">JPG, PNG, WEBP — máx. 10MB</p>
+        </div>
+        <div id="imgPreviewWrap" style="display:${prod?.imagem ? 'block' : 'none'}">
+          <img id="imgPreviewImg" src="${prod?.imagem || ''}" style="max-height:120px;border-radius:6px;max-width:100%">
+          <button type="button" onclick="event.stopPropagation();removerImagem()" style="display:block;margin:8px auto 0;background:rgba(255,23,68,.15);color:var(--danger);border:1px solid rgba(255,23,68,.3);padding:4px 12px;border-radius:6px;font-size:.78rem;cursor:pointer">Remover foto</button>
+        </div>
+      </div>
+      <input type="file" id="pImagem" accept="image/*" style="display:none" onchange="previewImagem(this)">
+      <input type="hidden" id="pImagemBase64" value="${prod?.imagem || ''}">
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="fecharModal()">Cancelar</button>
+      <button class="btn-primary" onclick="salvarProduto(${prod?.id || 'null'})">${edit ? 'Salvar' : 'Criar'}</button>
+    </div>`);
+}
+
+function salvarProduto(id) {
+  const nome  = document.getElementById('pNome').value.trim();
+  const preco = parseFloat(document.getElementById('pPreco').value);
+  const cat   = parseInt(document.getElementById('pCat').value);
+  const desc  = document.getElementById('pDesc').value.trim();
+  const tipo  = document.getElementById('pTipo').value.trim();
+  const dest  = document.getElementById('pDestaque').checked;
+  const wa    = document.getElementById('pWa').value.trim();
+  const imagem = document.getElementById('pImagemBase64')?.value || '';
+  if (!nome || isNaN(preco)) { toast('Preencha nome e preço', 'error'); return; }
+  const prods = getStore('produtos', []);
+  if (id) {
+    const idx = prods.findIndex(p => p.id === id);
+    if (idx > -1) Object.assign(prods[idx], { nome, preco, cat_id: cat, desc, tipo, destaque: dest, wa, imagem });
+  } else {
+    prods.push({ id: Date.now(), nome, preco, cat_id: cat, desc, tipo, destaque: dest, wa, imagem });
+  }
+  setStore('produtos', prods);
+  fecharModal(); produtos();
+  toast(id ? 'Produto atualizado!' : 'Produto criado!');
+}
+
+function modalEditarProduto(id) {
+  const prod = getStore('produtos', []).find(p => p.id === id);
+  if (prod) modalNovoProduto(prod);
+}
+
+function deletarProduto(id) {
+  if (!confirm('Excluir este produto?')) return;
+  setStore('produtos', getStore('produtos', []).filter(p => p.id !== id));
+  produtos();
+  toast('Produto excluído', 'warning');
+}
+
+/* =============================================
+   PEDIDOS (LOG)
+   ============================================= */
+function pedidos() {
+  const log = getStore('pedidos_log', []);
+
+  document.getElementById('adminContent').innerHTML = `
+    <div class="table-card">
+      <div class="table-header">
+        <h2><i class="fab fa-whatsapp"></i> Pedidos via WhatsApp (${log.length})</h2>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <button class="btn-secondary" onclick="if(confirm('Limpar todos os pedidos?')){setStore('pedidos_log',[]);pedidos();toast('Pedidos apagados','warning')}"><i class="fas fa-trash"></i> Limpar</button>
+          <button class="btn-primary" onclick="modalNovoPedido()"><i class="fas fa-plus"></i> Registrar Pedido</button>
+        </div>
+      </div>
+      <p style="padding:.75rem 1.25rem;font-size:.82rem;color:var(--text2);border-bottom:1px solid var(--border)">
+        <i class="fas fa-info-circle"></i> Os pedidos feitos no site aparecem aqui automaticamente.
+      </p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Pedido</th><th>Cliente</th><th>Itens</th><th>Total</th><th>Tipo</th><th>Pagto</th><th>Data / Hora</th><th>Ações</th></tr></thead>
+        <tbody>${log.slice().reverse().map((p, i) => {
+          const tel = p.tel ? p.tel.replace(/\D/g,'') : '';
+          const waLink = tel ? 'https://wa.me/55' + tel + '?text=' + encodeURIComponent('Olá ' + p.cliente + '! Seu pedido nº ' + (p.pedNum || (log.length - i)) + ' está sendo preparado! 🍗') : null;
+          return `<tr>
+            <td style="color:var(--text2);font-weight:700">#${p.pedNum || (log.length - i)}</td>
+            <td><strong>${p.cliente}</strong>${p.tel ? '<br><span style="font-size:.75rem;color:var(--text2)">' + p.tel + '</span>' : ''}</td>
+            <td style="max-width:220px;font-size:.82rem">${p.item}</td>
+            <td style="font-weight:700;color:var(--success);white-space:nowrap">${p.total || '—'}</td>
+            <td><span class="badge badge-info">${p.tipo || '—'}</span></td>
+            <td style="font-size:.82rem">${p.pgto || '—'}</td>
+            <td style="color:var(--text2);white-space:nowrap;font-size:.82rem">${p.data}<br>${p.hora}</td>
+            <td><div class="actions-col">
+              ${waLink ? '<a href="' + waLink + '" target="_blank" class="btn-edit" style="font-size:.75rem"><i class="fab fa-whatsapp"></i> Avisar</a>' : ''}
+              <button class="btn-danger" onclick="deletarPedido(${p.id})"><i class="fas fa-trash"></i></button>
+            </div></td>
+          </tr>`;
+        }).join('') || '<tr><td colspan="8" class="empty-row">Nenhum pedido registrado ainda.</td></tr>'}
+        </tbody>
+      </table></div>
+    </div>`;
+}
+
+function modalNovoPedido() {
+  abrirModal(`
+    <h2><i class="fab fa-whatsapp"></i> Registrar Pedido</h2>
+    <div class="form-group"><label>Nome do Cliente *</label><input type="text" id="pedCliente" required></div>
+    <div class="form-group"><label>Item Pedido *</label><input type="text" id="pedItem" placeholder="Ex: Frango à Passarinho" required></div>
+    <div class="form-group"><label>Observação</label><input type="text" id="pedObs" placeholder="Ex: Sem cebola"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="fecharModal()">Cancelar</button>
+      <button class="btn-primary" onclick="salvarPedido()">Registrar</button>
+    </div>`);
+}
+
+function salvarPedido() {
+  const cliente = document.getElementById('pedCliente').value.trim();
+  const item    = document.getElementById('pedItem').value.trim();
+  const obs     = document.getElementById('pedObs').value.trim();
+  if (!cliente || !item) { toast('Preencha cliente e item', 'error'); return; }
+  const now   = new Date();
+  const log   = getStore('pedidos_log', []);
+  log.push({
+    id: Date.now(), cliente, item: item + (obs ? ' (' + obs + ')' : ''),
+    data: now.toLocaleDateString('pt-BR'),
+    hora: now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+  });
+  setStore('pedidos_log', log);
+  fecharModal(); pedidos();
+  toast('Pedido registrado!');
+}
+
+function deletarPedido(id) {
+  if (!confirm('Remover este pedido do registro?')) return;
+  setStore('pedidos_log', getStore('pedidos_log', []).filter(p => p.id !== id));
+  pedidos();
+  toast('Pedido removido', 'warning');
+}
+
+/* =============================================
+   HORÁRIOS
+   ============================================= */
+function horarios() {
+  const dias = ['Domingo','Segunda-feira','Ter\u00e7a-feira','Quarta-feira','Quinta-feira','Sexta-feira','S\u00e1bado'];
+  const hors = getStore('horarios', dias.map((d,i) => ({ dia: i, nome: d, abertura: '11:00', fechamento: '20:00', aberto: true })));
+
+  document.getElementById('adminContent').innerHTML = `
+    <div class="table-card" style="max-width:680px">
+      <div class="table-header"><h2><i class="fas fa-clock"></i> Horários de Funcionamento</h2></div>
+      <div style="padding:1.25rem">
+        <table style="width:100%">
+          <thead><tr><th>Dia</th><th>Abertura</th><th>Fechamento</th><th>Aberto</th></tr></thead>
+          <tbody>
+            ${hors.map(h => `
+              <tr>
+                <td style="font-weight:600">${h.nome}</td>
+                <td><input type="time" id="ab${h.dia}" value="${h.abertura}" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.35rem .6rem;font-size:.85rem"></td>
+                <td><input type="time" id="fc${h.dia}" value="${h.fechamento}" style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.35rem .6rem;font-size:.85rem"></td>
+                <td><label class="toggle-switch"><input type="checkbox" id="op${h.dia}" ${h.aberto ? 'checked' : ''}><span class="toggle-track"></span></label></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+        <div style="margin-top:1.25rem">
+          <button class="btn-primary" onclick="salvarHorarios()"><i class="fas fa-save"></i> Salvar Horários</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function salvarHorarios() {
+  const dias = ['Domingo','Segunda-feira','Ter\u00e7a-feira','Quarta-feira','Quinta-feira','Sexta-feira','S\u00e1bado'];
+  const hors = dias.map((nome, i) => ({
+    dia: i, nome,
+    abertura:    document.getElementById('ab' + i)?.value || '11:00',
+    fechamento:  document.getElementById('fc' + i)?.value || '20:00',
+    aberto:      document.getElementById('op' + i)?.checked ?? true
+  }));
+  setStore('horarios', hors);
+  toast('Horários salvos!');
+}
+
+/* =============================================
+   CONFIGURAÇÕES
+   ============================================= */
+function config() {
+  const corAtual = localStorage.getItem('pda_cor_tema') || '#e8560a';
+
+  document.getElementById('adminContent').innerHTML = `
+    <div class="table-card" style="max-width:680px">
+      <div class="table-header"><h2><i class="fas fa-cog"></i> Informações da Loja</h2></div>
+      <div style="padding:1.25rem">
+        <div class="form-group"><label>Nome da Loja</label><input type="text" id="cfNome" value="POINT DA ALDEIA"></div>
+        <div class="form-row">
+          <div class="form-group"><label>WhatsApp</label><input type="text" id="cfWa" value="(13) 99788-6293"></div>
+          <div class="form-group"><label>Instagram</label><input type="text" id="cfIg" value="@pointdaaldeia"></div>
+        </div>
+        <div class="form-group"><label>Endereço</label><input type="text" id="cfEnd" value="Aldeia, Brasil"></div>
+        <div class="form-group"><label>Link do Google Maps</label><input type="text" id="cfMaps" value="https://maps.app.goo.gl/3Fhbeh4ubEvN22kW8"></div>
+        <div class="form-group"><label>Senha do Admin</label><input type="password" id="cfSenha" placeholder="Nova senha (deixe vazio para manter)"></div>
+        <button class="btn-primary" onclick="toast('Configurações salvas!','success')"><i class="fas fa-save"></i> Salvar</button>
+
+        <hr style="border-color:var(--border);margin:2rem 0">
+
+        <h3 style="margin-bottom:1.25rem;font-size:.95rem"><i class="fas fa-palette" style="color:var(--primary)"></i> Cor do Site</h3>
+        <p style="font-size:.82rem;color:var(--text2);margin-bottom:1rem">Escolha a cor principal que aparece em todos os botões, preços e destaques do site.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1rem" id="coresPaleta">
+          ${[
+            { cor:'#e8560a', nome:'Laranja (padrão)' },
+            { cor:'#e53935', nome:'Vermelho' },
+            { cor:'#d81b60', nome:'Rosa' },
+            { cor:'#8e24aa', nome:'Roxo' },
+            { cor:'#1e88e5', nome:'Azul' },
+            { cor:'#00897b', nome:'Verde-água' },
+            { cor:'#43a047', nome:'Verde' },
+            { cor:'#f4c300', nome:'Amarelo' },
+            { cor:'#ff7043', nome:'Coral' },
+            { cor:'#6d4c41', nome:'Marrom' },
+            { cor:'#546e7a', nome:'Cinza-azul' },
+            { cor:'#000000', nome:'Preto' },
+          ].map(c => `
+            <button onclick="aplicarCor('${c.cor}')" title="${c.nome}" style="
+              width:42px;height:42px;border-radius:50%;background:${c.cor};
+              border:3px solid ${c.cor === corAtual ? '#fff' : 'transparent'};
+              outline:${c.cor === corAtual ? '3px solid '+c.cor : 'none'};
+              cursor:pointer;transition:transform .15s;box-shadow:0 2px 8px rgba(0,0,0,.4)
+            " onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'"></button>
+          `).join('')}
+        </div>
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
+          <label style="font-size:.82rem;color:var(--text2)">Cor personalizada:</label>
+          <input type="color" id="corPersonalizada" value="${corAtual}" oninput="aplicarCor(this.value)"
+            style="width:48px;height:36px;border:none;border-radius:8px;cursor:pointer;background:none;padding:0">
+          <span style="font-size:.82rem;color:var(--text2)" id="corHex">${corAtual}</span>
+        </div>
+
+        <hr style="border-color:var(--border);margin:2rem 0">
+        <h3 style="margin-bottom:1rem;font-size:.95rem"><i class="fas fa-trash-alt" style="color:var(--danger)"></i> Zona de Perigo</h3>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+          <button class="btn-danger" onclick="if(confirm('Limpar todos os pedidos registrados?')){setStore('pedidos_log',[]);toast('Pedidos apagados','warning')}">Limpar Pedidos</button>
+          <button class="btn-danger" onclick="if(confirm('Resetar produtos para o padrão?')){setStore('produtos',PRODS_DEFAULT);setStore('categorias',CATS_DEFAULT);localStorage.setItem('pda_data_version','3');toast('Dados resetados!','warning')}">Resetar Cardápio</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function aplicarCor(cor) {
+  localStorage.setItem('pda_cor_tema', cor);
+
+  // Aplica no admin agora
+  document.documentElement.style.setProperty('--primary', cor);
+  var hex = cor.replace('#','');
+  var r = parseInt(hex.substring(0,2),16);
+  var g = parseInt(hex.substring(2,4),16);
+  var b = parseInt(hex.substring(4,6),16);
+  var escuro = 'rgb('+Math.max(0,r-30)+','+Math.max(0,g-30)+','+Math.max(0,b-30)+')';
+  document.documentElement.style.setProperty('--primary-d', escuro);
+
+  // Envia para outras abas abertas (index.html) em tempo real
+  try {
+    var bc = new BroadcastChannel('pda_tema');
+    bc.postMessage({ cor: cor });
+    bc.close();
+  } catch(err) {}
+
+  // Atualiza hex exibido
+  var hexEl = document.getElementById('corHex');
+  if (hexEl) hexEl.textContent = cor;
+
+  // Atualiza bordas da paleta
+  document.querySelectorAll('#coresPaleta button').forEach(function(btn) {
+    var m = btn.getAttribute('onclick').match(/'([^']+)'/);
+    if (!m) return;
+    var btnCor = m[1];
+    btn.style.border = btnCor === cor ? '3px solid #fff' : '3px solid transparent';
+    btn.style.outline = btnCor === cor ? '3px solid ' + cor : 'none';
+  });
+
+  toast('Cor aplicada com sucesso!', 'success');
+}
+
+/* Tecla ESC fecha modal */
+document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharModal(); });
+</script>
+</body>
+</html>
+
