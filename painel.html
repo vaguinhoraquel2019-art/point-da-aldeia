@@ -57,13 +57,13 @@
       text-align: center;
       transition: border-color 0.3s, transform 0.3s;
     }
-    .card:hover { border-color: #e8560a; transform: translateY(-4px); }
+    .card:hover { border-color: var(--primary); transform: translateY(-4px); }
 
     .card-icon {
       font-size: 2.6rem;
       margin-bottom: 18px;
     }
-    .card-icon.install { color: #e8560a; }
+    .card-icon.install { color: var(--primary); }
     .card-icon.deploy  { color: #25D366; }
 
     .card h2 {
@@ -93,8 +93,8 @@
       transition: background 0.3s, transform 0.2s;
     }
     .btn:hover { transform: scale(1.04); }
-    .btn-install { background: #e8560a; color: #fff; }
-    .btn-install:hover { background: #ff7a35; }
+    .btn-install { background: var(--primary); color: #fff; }
+    .btn-install:hover { background: var(--primary-d); }
     .btn-deploy  { background: #25D366; color: #fff; }
     .btn-deploy:hover  { background: #1ebe5d; }
 
@@ -114,8 +114,7 @@
       content: '→';
       position: absolute;
       left: 0;
-      color: #e8560a;
-    }
+      color: var(--primary);    }
 
     .divider {
       width: 100%;
@@ -149,8 +148,7 @@
       text-align: left;
       font-family: 'Courier New', monospace;
       font-size: 0.82rem;
-      color: #e8560a;
-      margin-bottom: 10px;
+      color: var(--primary);      margin-bottom: 10px;
       position: relative;
     }
     .code-block span.comment { color: #555; }
